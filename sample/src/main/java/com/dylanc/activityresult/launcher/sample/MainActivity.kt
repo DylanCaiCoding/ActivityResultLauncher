@@ -1,15 +1,28 @@
 package com.dylanc.activityresult.launcher.sample
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import com.dylanc.activityresult.launcher.TakePictureLauncher
+import androidx.appcompat.app.AppCompatActivity
+import com.dylanc.activityresult.launcher.sample.databinding.ActivityMainBinding
+import com.dylanc.activityresult.launcher.sample.java.JavaSampleActivity
+import com.dylanc.activityresult.launcher.sample.kotlin.KotlinSampleActivity
 
 class MainActivity : AppCompatActivity() {
 
-  private val takePictureLauncher = TakePictureLauncher()
+  private lateinit var binding: ActivityMainBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    with(binding) {
+      btnKotlin.setOnClickListener {
+        startActivity(Intent(this@MainActivity, KotlinSampleActivity::class.java))
+      }
+      btnJava.setOnClickListener {
+        startActivity(Intent(this@MainActivity, JavaSampleActivity::class.java))
+      }
+    }
+
   }
 }

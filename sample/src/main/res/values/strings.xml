@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">ActivityResultLauncher</string>
+  <string name="no_read_permission">Please go to settings to authorize read permission</string>
 </resources>
