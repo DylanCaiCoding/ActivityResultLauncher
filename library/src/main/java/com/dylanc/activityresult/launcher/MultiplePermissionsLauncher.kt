@@ -28,10 +28,36 @@ inline fun ComponentActivity.MultiplePermissionsLauncher() = MultiplePermissions
 
 inline fun Fragment.MultiplePermissionsLauncher() = MultiplePermissionsLauncher(this)
 
-class MultiplePermissionsLauncher(caller: ActivityResultCaller) :
+class MultiplePermissionsLauncher(private val caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Array<String>, Map<String, Boolean>>(caller, ActivityResultContracts.RequestMultiplePermissions()) {
 
   fun launch(vararg permissions: String, onActivityResult: (Map<String, Boolean>) -> Unit) {
     launch(arrayOf(*permissions), onActivityResult)
+  }
+
+  @JvmOverloads
+  fun launch(
+    vararg permissions: String,
+    onAllGranted: () -> Unit,
+    onDenied: (List<String>) -> Unit,
+    onShowRationale: ((List<String>) -> Unit)? = null
+  ) {
+    launch(*permissions) { result ->
+      if (result.containsValue(false)) {
+        val deniedList = result.filter { !it.value }.map { it.key }
+        val map = deniedList.groupBy { permission ->
+          if (caller.shouldShowRequestPermissionRationale(permission)) DENIED else EXPLAINED
+        }
+        map[EXPLAINED]?.let { onShowRationale?.invoke(it) ?: onDenied(it) }
+        map[DENIED]?.let { onDenied(it) }
+      } else {
+        onAllGranted()
+      }
+    }
+  }
+
+  companion object {
+    private const val DENIED = "DENIED"
+    private const val EXPLAINED = "EXPLAINED"
   }
 }

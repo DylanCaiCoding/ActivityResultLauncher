@@ -18,12 +18,9 @@
 
 package com.dylanc.activityresult.launcher
 
-import android.app.Activity
-import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 
 
@@ -40,25 +37,14 @@ class PermissionLauncher(
     permission: String,
     onGranted: () -> Unit,
     onDenied: () -> Unit,
-    onShowRationale: (() -> Boolean)? = null
+    onShowRationale: (() -> Unit)? = null
   ) {
     launch(permission) {
       when {
         it -> onGranted()
-        shouldShowRequestPermissionRationale(permission) -> onShowRationale?.invoke() ?: onDenied()
+        caller.shouldShowRequestPermissionRationale(permission) -> onShowRationale?.invoke() ?: onDenied()
         else -> onDenied()
       }
     }
   }
-
-  private fun shouldShowRequestPermissionRationale(permission: String) =
-    when (caller) {
-      is Activity -> ActivityCompat.shouldShowRequestPermissionRationale(caller, permission)
-      is Fragment -> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-          caller.shouldShowRequestPermissionRationale(permission)
-        else false
-      }
-      else -> false
-    }
 }
