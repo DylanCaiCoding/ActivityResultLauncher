@@ -9,6 +9,7 @@ import androidx.core.content.FileProvider
 import com.dylanc.activityresult.launcher.*
 import com.dylanc.activityresult.launcher.sample.R
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityLauncherBinding
+import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextLauncher
 import java.io.File
 
 
@@ -25,6 +26,7 @@ class KotlinSampleActivity : AppCompatActivity() {
   private val openMultipleDocumentLauncher = OpenMultipleDocumentsLauncher()
   private val openDocumentTreeLauncher = OpenDocumentTreeLauncher()
   private val cropPictureLauncher = CropPictureLauncher()
+  private val inputTextLauncher = InputTextLauncher()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -39,6 +41,7 @@ class KotlinSampleActivity : AppCompatActivity() {
       btnCreateDocument.setOnClickListener { createDocument() }
       btnOpenMultipleDocument.setOnClickListener { openMultipleDocument() }
       btnOpenDocumentTree.setOnClickListener { openDocumentTree() }
+      btnInputText.setOnClickListener { inputText() }
     }
   }
 
@@ -61,7 +64,7 @@ class KotlinSampleActivity : AppCompatActivity() {
 
   private fun selectPicture() {
     getContentLauncher.launchForImage(
-      { uri ->
+      onActivityResult = { uri ->
         if (uri != null) {
           binding.ivPicture.setImageURI(uri)
         }
@@ -100,6 +103,13 @@ class KotlinSampleActivity : AppCompatActivity() {
   private fun openDocumentTree() {
     openDocumentTreeLauncher.launch(null) {
 
+    }
+  }
+
+  private fun inputText() {
+    inputTextLauncher.launch("name","Input name") {
+      if (!it.isNullOrEmpty())
+        Toast.makeText(application, it, Toast.LENGTH_SHORT).show()
     }
   }
 

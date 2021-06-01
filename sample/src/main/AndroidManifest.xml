@@ -11,6 +11,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/Theme.ActivityResultLauncher">
+    <activity android:name=".kotlin.launcher.InputTextActivity"/>
     <activity android:name=".kotlin.KotlinSampleActivity"/>
     <activity android:name=".java.JavaSampleActivity" />
     <activity android:name=".MainActivity">
