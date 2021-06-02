@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
-
 package com.dylanc.activityresult.launcher
 
-import android.net.Uri
+import android.app.Activity
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 
 /**
  * @author Dylan Cai
  */
-class TakePictureLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Uri, Boolean>(caller, ActivityResultContracts.TakePicture())
+
+internal fun ActivityResultCaller.shouldShowRequestPermissionRationale(permission: String) =
+  when (this) {
+    is Activity -> ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
+    is Fragment -> ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permission)
+    else -> false
+  }

@@ -25,29 +25,17 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 
 /**
  * @author Dylan Cai
  */
 
-inline fun ComponentActivity.ActivityResultLauncher() = ActivityResultLauncher(this)
-
-inline fun Fragment.ActivityResultLauncher() = ActivityResultLauncher(this)
-
 inline fun <I, O> ComponentActivity.ActivityResultLauncher(contract: ActivityResultContract<I, O>) =
   BaseActivityResultLauncher(this, contract)
 
 inline fun <I, O> Fragment.ActivityResultLauncher(contract: ActivityResultContract<I, O>) =
   BaseActivityResultLauncher(this, contract)
-
-internal fun ActivityResultCaller.shouldShowRequestPermissionRationale(permission: String) =
-  when (this) {
-    is Activity -> ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
-    is Fragment -> ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permission)
-    else -> false
-  }
 
 class ActivityResultLauncher(private val caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Intent, ActivityResult>(caller, StartActivityForResult()) {

@@ -18,16 +18,12 @@
 
 package com.dylanc.activityresult.launcher
 
-import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
 
-
-inline fun ComponentActivity.PermissionLauncher() = PermissionLauncher(this)
-
-inline fun Fragment.PermissionLauncher() = PermissionLauncher(this)
-
+/**
+ * @author Dylan Cai
+ */
 class PermissionLauncher(
   private val caller: ActivityResultCaller
 ) : BaseActivityResultLauncher<String, Boolean>(caller, ActivityResultContracts.RequestPermission()) {

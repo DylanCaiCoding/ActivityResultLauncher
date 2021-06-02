@@ -26,17 +26,13 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
-import androidx.fragment.app.Fragment
 
-
-inline fun ComponentActivity.CropPictureLauncher() = CropPictureLauncher(this)
-
-inline fun Fragment.CropPictureLauncher() = CropPictureLauncher(this)
-
+/**
+ * @author Dylan Cai
+ */
 data class CropPictureConfig @JvmOverloads constructor(
   val inputUri: Uri,
   var aspectX: Int = 1,
@@ -73,8 +69,8 @@ class CropPictureContract : ActivityResultContract<CropPictureConfig, Uri>() {
   private lateinit var outputUri: Uri
 
   @CallSuper
-  override fun createIntent(context: Context, input: CropPictureConfig): Intent {
-    return Intent("com.android.camera.action.CROP")
+  override fun createIntent(context: Context, input: CropPictureConfig) =
+    Intent("com.android.camera.action.CROP")
       .apply {
         outputUri = context.contentResolver.insert(
           MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -91,8 +87,8 @@ class CropPictureContract : ActivityResultContract<CropPictureConfig, Uri>() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
           addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-      }.apply(input.onCreateIntent)
-  }
+      }
+      .apply(input.onCreateIntent)
 
   override fun parseResult(resultCode: Int, intent: Intent?): Uri? =
     if (resultCode == Activity.RESULT_OK) outputUri else null

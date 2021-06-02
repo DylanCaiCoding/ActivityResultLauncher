@@ -16,17 +16,17 @@ import java.io.File
 class KotlinSampleActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityLauncherBinding
-  private val takePictureLauncher = TakePictureLauncher()
-  private val takeVideoLauncher = TakeVideoLauncher()
-  private val pickContactLauncher = PickContactLauncher()
-  private val takePicturePreviewLauncher = TakePicturePreviewLauncher()
-  private val permissionLauncher = PermissionLauncher()
-  private val getContentLauncher = GetContentLauncher()
-  private val createDocumentLauncher = CreateDocumentLauncher()
-  private val openMultipleDocumentLauncher = OpenMultipleDocumentsLauncher()
-  private val openDocumentTreeLauncher = OpenDocumentTreeLauncher()
-  private val cropPictureLauncher = CropPictureLauncher()
-  private val inputTextLauncher = InputTextLauncher()
+  private val takePictureLauncher = TakePictureLauncher(this)
+  private val takeVideoLauncher = TakeVideoLauncher(this)
+  private val pickContactLauncher = PickContactLauncher(this)
+  private val takePicturePreviewLauncher = TakePicturePreviewLauncher(this)
+  private val permissionLauncher = PermissionLauncher(this)
+  private val getContentLauncher = GetContentLauncher(this)
+  private val createDocumentLauncher = CreateDocumentLauncher(this)
+  private val openMultipleDocumentLauncher = OpenMultipleDocumentsLauncher(this)
+  private val openDocumentTreeLauncher = OpenDocumentTreeLauncher(this)
+  private val cropPictureLauncher = CropPictureLauncher(this)
+  private val inputTextLauncher = InputTextLauncher(this)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -107,7 +107,7 @@ class KotlinSampleActivity : AppCompatActivity() {
   }
 
   private fun inputText() {
-    inputTextLauncher.launch("name","Input name") {
+    inputTextLauncher.launch("name", "Input name") {
       if (!it.isNullOrEmpty())
         Toast.makeText(application, it, Toast.LENGTH_SHORT).show()
     }
