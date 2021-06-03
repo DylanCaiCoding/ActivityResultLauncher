@@ -8,7 +8,7 @@ import com.dylanc.activityresult.launcher.BaseActivityResultLauncher
  */
 
 class InputTextLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<InputTextConfig, String>(caller, InputTextResultContract()) {
+  BaseActivityResultLauncher<InputTextRequest, String>(caller, InputTextResultContract()) {
 
   fun launch(
     name: String,
@@ -18,5 +18,5 @@ class InputTextLauncher(caller: ActivityResultCaller) :
     listener: OnFilterValueListener? = null,
     onActivityResult: (String?) -> Unit
   ) =
-    launch(InputTextConfig(name, title, hint, value, listener), onActivityResult)
+    launch(InputTextRequest(name, title, hint, value, listener), onActivityResult)
 }

@@ -14,42 +14,48 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE", "FunctionName")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import android.app.Activity
 import android.content.Intent
-import androidx.activity.ComponentActivity
+import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.fragment.app.Fragment
+import androidx.core.os.bundleOf
+import com.dylanc.callbacks.Callback2
 
 /**
  * @author Dylan Cai
  */
-
-inline fun <I, O> ComponentActivity.ActivityResultLauncher(contract: ActivityResultContract<I, O>) =
-  BaseActivityResultLauncher(this, contract)
-
-inline fun <I, O> Fragment.ActivityResultLauncher(contract: ActivityResultContract<I, O>) =
-  BaseActivityResultLauncher(this, contract)
-
-class ActivityResultLauncher(private val caller: ActivityResultCaller) :
+class StartActivityLauncher(private val caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Intent, ActivityResult>(caller, StartActivityForResult()) {
 
-  inline fun <reified T : Activity> launch(noinline onActivityResult: (ActivityResult) -> Unit) {
-    launch(T::class.java, onActivityResult)
+  inline fun <reified T : Activity> launch(
+    vararg pairs: Pair<String, *>,
+    onActivityResult: Callback2<Int, Intent?>
+  ) {
+    launch(T::class.java, bundleOf(*pairs), onActivityResult)
   }
 
-  fun <T : Activity> launch(clazz: Class<T>, onActivityResult: (ActivityResult) -> Unit) {
-    val context = when (caller) {
-      is ComponentActivity -> caller
-      is Fragment -> caller.requireContext()
-      else -> throw IllegalAccessException()
-    }
-    launch(Intent(context, clazz), onActivityResult)
+  @JvmOverloads
+  fun <T : Activity> launch(
+    clazz: Class<T>,
+    extras: Bundle? = null,
+    onActivityResult: Callback2<Int, Intent?>
+  ) {
+    val intent = Intent(caller.context, clazz)
+    extras?.let { intent.putExtras(it) }
+    launch(intent, onActivityResult)
   }
+
+  fun launch(
+    intent: Intent,
+    onActivityResult: Callback2<Int, Intent?>
+  ) =
+    launch(intent) { result ->
+      onActivityResult(result.resultCode, result.data)
+    }
 }

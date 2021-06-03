@@ -21,22 +21,22 @@ package com.dylanc.activityresult.launcher
 import android.Manifest
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.activity.result.contract.ActivityResultContracts.GetMultipleContents
 import com.dylanc.callbacks.Callback0
 import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
  */
-class GetContentLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<String, Uri>(caller, GetContent()) {
+class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
+  BaseActivityResultLauncher<String, List<Uri>>(caller, GetMultipleContents()) {
 
   private val permissionLauncher = RequestPermissionLauncher(caller)
 
   @JvmOverloads
   fun launch(
     input: String,
-    onActivityResult: Callback1<Uri?>,
+    onActivityResult: Callback1<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) {
@@ -50,21 +50,21 @@ class GetContentLauncher(caller: ActivityResultCaller) :
 
   @JvmOverloads
   fun launchForImage(
-    onActivityResult: Callback1<Uri?>,
+    onActivityResult: Callback1<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
-    onActivityResult: Callback1<Uri?>,
+    onActivityResult: Callback1<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForAudio(
-    onActivityResult: Callback1<Uri?>,
+    onActivityResult: Callback1<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)

@@ -16,19 +16,21 @@
 
 package com.dylanc.activityresult.launcher;
 
+import android.annotation.SuppressLint;
+
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultCaller;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 
 /**
  * @author Dylan Cai
  */
 public class BaseActivityResultLauncher<I, O> {
 
-  private final ActivityResultLauncher<I> launcher;
+  private final androidx.activity.result.ActivityResultLauncher<I> launcher;
   private ActivityResultCallback<O> callback;
 
   public BaseActivityResultLauncher(ActivityResultCaller caller, ActivityResultContract<I, O> contract) {
@@ -40,8 +42,13 @@ public class BaseActivityResultLauncher<I, O> {
     });
   }
 
-  public void launch(@Nullable I input, @NonNull ActivityResultCallback<O> callback) {
+  public void launch(@SuppressLint("UnknownNullness") I input, @NonNull ActivityResultCallback<O> callback) {
+    launch(input, null, callback);
+  }
+
+  public void launch(@SuppressLint("UnknownNullness") I input, @Nullable ActivityOptionsCompat options,
+                     @NonNull ActivityResultCallback<O> callback) {
     this.callback = callback;
-    launcher.launch(input);
+    launcher.launch(input, options);
   }
 }

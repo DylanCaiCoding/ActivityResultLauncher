@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import com.dylanc.callbacks.Callback0
 
 /**
  * @author Dylan Cai
  */
-class PermissionLauncher(
-  private val caller: ActivityResultCaller
-) : BaseActivityResultLauncher<String, Boolean>(caller, ActivityResultContracts.RequestPermission()) {
+class RequestPermissionLauncher(private val caller: ActivityResultCaller) :
+  BaseActivityResultLauncher<String, Boolean>(caller, RequestPermission()) {
 
   @JvmOverloads
   fun launch(
     permission: String,
-    onGranted: () -> Unit,
-    onDenied: () -> Unit,
-    onShowRationale: (() -> Unit)? = null
+    onGranted: Callback0,
+    onDenied: Callback0,
+    onExplainRequest: (Callback0)? = null
   ) {
     launch(permission) {
       when {
         it -> onGranted()
-        caller.shouldShowRequestPermissionRationale(permission) -> onShowRationale?.invoke() ?: onDenied()
+        caller.shouldShowRequestPermissionRationale(permission) -> onExplainRequest?.invoke() ?: onDenied()
         else -> onDenied()
       }
     }

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTree
 
 /**
  * @author Dylan Cai
  */
 class OpenDocumentTreeLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Uri, Uri>(caller, ActivityResultContracts.OpenDocumentTree())
+  BaseActivityResultLauncher<Uri, Uri>(caller, OpenDocumentTree())

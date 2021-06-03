@@ -18,13 +18,12 @@
 
 package com.dylanc.activityresult.launcher
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts.TakeVideo
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 
 /**
  * @author Dylan Cai
  */
-class TakeVideoLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Uri, Bitmap>(caller, TakeVideo())
+class OpenDocumentLauncher(caller: ActivityResultCaller) :
+  BaseActivityResultLauncher<Array<String>, Uri>(caller, OpenDocument())

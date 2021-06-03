@@ -17,6 +17,7 @@
 package com.dylanc.activityresult.launcher
 
 import android.app.Activity
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -30,4 +31,11 @@ internal fun ActivityResultCaller.shouldShowRequestPermissionRationale(permissio
     is Activity -> ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
     is Fragment -> ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permission)
     else -> false
+  }
+
+internal val ActivityResultCaller.context
+  get() = when (this) {
+    is ComponentActivity -> this
+    is Fragment -> this.requireContext()
+    else -> throw IllegalAccessException()
   }

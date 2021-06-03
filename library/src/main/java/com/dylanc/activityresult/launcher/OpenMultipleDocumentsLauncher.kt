@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.OpenMultipleDocuments
 
 /**
  * @author Dylan Cai
  */
 class OpenMultipleDocumentsLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Array<String>, List<Uri>>(caller, ActivityResultContracts.OpenMultipleDocuments())
+  BaseActivityResultLauncher<Array<String>, List<Uri>>(caller, OpenMultipleDocuments())

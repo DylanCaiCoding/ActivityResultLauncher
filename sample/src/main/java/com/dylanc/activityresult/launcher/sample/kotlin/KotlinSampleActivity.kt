@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.dylanc.activityresult.launcher.*
+import com.dylanc.activityresult.launcher.sample.MainActivity
 import com.dylanc.activityresult.launcher.sample.R
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityLauncherBinding
 import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextLauncher
@@ -20,13 +21,15 @@ class KotlinSampleActivity : AppCompatActivity() {
   private val takeVideoLauncher = TakeVideoLauncher(this)
   private val pickContactLauncher = PickContactLauncher(this)
   private val takePicturePreviewLauncher = TakePicturePreviewLauncher(this)
-  private val permissionLauncher = PermissionLauncher(this)
+  private val requestPermissionLauncher = RequestPermissionLauncher(this)
+  private val requestMultiplePermissionsLauncher = RequestMultiplePermissionsLauncher(this)
   private val getContentLauncher = GetContentLauncher(this)
   private val createDocumentLauncher = CreateDocumentLauncher(this)
   private val openMultipleDocumentLauncher = OpenMultipleDocumentsLauncher(this)
   private val openDocumentTreeLauncher = OpenDocumentTreeLauncher(this)
   private val cropPictureLauncher = CropPictureLauncher(this)
   private val inputTextLauncher = InputTextLauncher(this)
+  private val startActivityLauncher = StartActivityLauncher(this)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -49,8 +52,8 @@ class KotlinSampleActivity : AppCompatActivity() {
     val uri = uriOf("test.jpg")
     takePictureLauncher.launch(uri) {
       if (it) {
-        cropPictureLauncher.launch(uri) { cropUri ->
-          binding.ivPicture.setImageURI(cropUri)
+        cropPictureLauncher.launch(uri) { outputUri ->
+          binding.ivPicture.setImageURI(outputUri)
         }
       }
     }
@@ -70,7 +73,7 @@ class KotlinSampleActivity : AppCompatActivity() {
         }
       },
       onPermissionDenied = {
-        Toast.makeText(application, R.string.no_read_permission, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.no_read_permission, Toast.LENGTH_SHORT).show()
       }
     )
   }
@@ -84,32 +87,41 @@ class KotlinSampleActivity : AppCompatActivity() {
 
   private fun pickContact() {
     pickContactLauncher.launch {
-
+      if (it != null) {
+        Toast.makeText(this, it.path, Toast.LENGTH_SHORT).show()
+      }
     }
   }
 
   private fun createDocument() {
     createDocumentLauncher.launch(null) {
-
+      if (it != null) {
+        Toast.makeText(this, it.path, Toast.LENGTH_SHORT).show()
+      }
     }
   }
 
   private fun openMultipleDocument() {
     openMultipleDocumentLauncher.launch(arrayOf()) {
-
+      if (it.isNullOrEmpty()) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+      }
     }
   }
 
   private fun openDocumentTree() {
     openDocumentTreeLauncher.launch(null) {
-
+      if (it != null) {
+        Toast.makeText(this, it.path, Toast.LENGTH_SHORT).show()
+      }
     }
   }
 
   private fun inputText() {
     inputTextLauncher.launch("name", "Input name") {
-      if (!it.isNullOrEmpty())
-        Toast.makeText(application, it, Toast.LENGTH_SHORT).show()
+      if (it != null) {
+        Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+      }
     }
   }
 

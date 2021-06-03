@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickContact
+import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
  */
 class PickContactLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Void, Uri>(caller, ActivityResultContracts.PickContact()) {
+  BaseActivityResultLauncher<Void, Uri>(caller, PickContact()) {
 
-  fun launch(onActivityResult: (Uri?) -> Unit) = launch(null, onActivityResult)
+  fun launch(onActivityResult: Callback1<Uri?>) = launch(null) { onActivityResult(it) }
 }

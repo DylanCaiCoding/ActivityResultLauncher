@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
@@ -29,11 +29,12 @@ import android.provider.MediaStore
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
+import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
  */
-data class CropPictureConfig @JvmOverloads constructor(
+data class CropPictureRequest @JvmOverloads constructor(
   val inputUri: Uri,
   var aspectX: Int = 1,
   var aspectY: Int = 1,
@@ -44,32 +45,32 @@ data class CropPictureConfig @JvmOverloads constructor(
 )
 
 class CropPictureLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<CropPictureConfig, Uri>(caller, CropPictureContract()) {
+  BaseActivityResultLauncher<CropPictureRequest, Uri>(caller, CropPictureContract()) {
 
   @JvmOverloads
   fun launch(
     inputUri: Uri,
-    aspectX: Int = 1,
-    aspectY: Int = 1,
-    outputX: Int = 512,
-    outputY: Int = 512,
+    aspectX: Int = 1, aspectY: Int = 1,
+    outputX: Int = 512, outputY: Int = 512,
     outputContentValues: ContentValues = ContentValues(),
     onCreateIntent: (Intent) -> Unit = {},
-    block: (Uri?) -> Unit
-  ) =
-    launch(
-      CropPictureConfig(
-        inputUri, aspectX, aspectY, outputX,
-        outputY, outputContentValues, onCreateIntent
-      ), block
+    onActivityResult: Callback1<Uri?>
+  ) {
+    val request = CropPictureRequest(
+      inputUri, aspectX, aspectY, outputX,
+      outputY, outputContentValues, onCreateIntent
     )
+    launch(request) {
+      onActivityResult(it)
+    }
+  }
 }
 
-class CropPictureContract : ActivityResultContract<CropPictureConfig, Uri>() {
+class CropPictureContract : ActivityResultContract<CropPictureRequest, Uri>() {
   private lateinit var outputUri: Uri
 
   @CallSuper
-  override fun createIntent(context: Context, input: CropPictureConfig) =
+  override fun createIntent(context: Context, input: CropPictureRequest) =
     Intent("com.android.camera.action.CROP")
       .apply {
         outputUri = context.contentResolver.insert(

@@ -38,6 +38,4 @@ class InputTextActivity : AppCompatActivity() {
       finish()
     }
   }
-
-
 }

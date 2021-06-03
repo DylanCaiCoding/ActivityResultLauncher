@@ -9,21 +9,8 @@ import java.io.Serializable
 /**
  * @author Dylan Cai
  */
-
-class InputTextConfig(
-  val name: String,
-  val title: String = name,
-  val hint: String? = null,
-  val value: String? = null,
-  val listener: OnFilterValueListener? = null
-)
-
-interface OnFilterValueListener : Serializable {
-  fun onFilterValue(value: String): Boolean
-}
-
-class InputTextResultContract : ActivityResultContract<InputTextConfig, String>() {
-  override fun createIntent(context: Context, input: InputTextConfig) =
+class InputTextResultContract : ActivityResultContract<InputTextRequest, String>() {
+  override fun createIntent(context: Context, input: InputTextRequest) =
     Intent(context, InputTextActivity::class.java).apply {
       putExtra(KEY_NAME, input.name)
       putExtra(KEY_TITLE, input.title)
@@ -32,12 +19,8 @@ class InputTextResultContract : ActivityResultContract<InputTextConfig, String>(
       putExtra(KEY_LISTENER, input.listener)
     }
 
-  override fun parseResult(resultCode: Int, intent: Intent?) =
-    if (resultCode == Activity.RESULT_OK && intent != null) {
-      intent.getStringExtra(KEY_VALUE)
-    } else {
-      null
-    }
+  override fun parseResult(resultCode: Int, intent: Intent?): String? =
+    if (resultCode == Activity.RESULT_OK) intent?.getStringExtra(KEY_VALUE) else null
 
   companion object {
     const val KEY_TITLE = "title"

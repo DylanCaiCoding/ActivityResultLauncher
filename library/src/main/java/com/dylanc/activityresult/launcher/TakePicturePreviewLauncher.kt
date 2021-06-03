@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import android.graphics.Bitmap
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.TakePicturePreview
+import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
  */
 class TakePicturePreviewLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Void, Bitmap>(caller, ActivityResultContracts.TakePicturePreview()) {
+  BaseActivityResultLauncher<Void, Bitmap>(caller, TakePicturePreview()) {
 
-  fun launch(onActivityResult: (Bitmap?) -> Unit) = launch(null, onActivityResult)
+  fun launch(onActivityResult: Callback1<Bitmap?>) = launch(null) { onActivityResult(it) }
 }

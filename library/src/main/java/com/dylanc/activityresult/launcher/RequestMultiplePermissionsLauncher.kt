@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "NOTHING_TO_INLINE")
+@file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
+import com.dylanc.callbacks.Callback0
+import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
  */
-class MultiplePermissionsLauncher(private val caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Array<String>, Map<String, Boolean>>(caller, ActivityResultContracts.RequestMultiplePermissions()) {
+class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCaller) :
+  BaseActivityResultLauncher<Array<String>, Map<String, Boolean>>(caller, RequestMultiplePermissions()) {
 
   fun launch(vararg permissions: String, onActivityResult: (Map<String, Boolean>) -> Unit) {
     launch(arrayOf(*permissions), onActivityResult)
@@ -34,9 +36,9 @@ class MultiplePermissionsLauncher(private val caller: ActivityResultCaller) :
   @JvmOverloads
   fun launch(
     vararg permissions: String,
-    onAllGranted: () -> Unit,
-    onDenied: (List<String>) -> Unit,
-    onShowRationale: ((List<String>) -> Unit)? = null
+    onAllGranted: Callback0,
+    onDenied: Callback1<List<String>>,
+    onExplainRequest: (Callback1<List<String>>)? = null
   ) {
     launch(*permissions) { result ->
       if (result.containsValue(false)) {
@@ -44,7 +46,7 @@ class MultiplePermissionsLauncher(private val caller: ActivityResultCaller) :
         val map = deniedList.groupBy { permission ->
           if (caller.shouldShowRequestPermissionRationale(permission)) DENIED else EXPLAINED
         }
-        map[EXPLAINED]?.let { onShowRationale?.invoke(it) ?: onDenied(it) }
+        map[EXPLAINED]?.let { onExplainRequest?.invoke(it) ?: onDenied(it) }
         map[DENIED]?.let { onDenied(it) }
       } else {
         onAllGranted()
