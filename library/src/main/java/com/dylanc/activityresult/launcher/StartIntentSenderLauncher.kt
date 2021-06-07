@@ -47,7 +47,9 @@ class StartIntentSenderLauncher(caller: ActivityResultCaller) :
       .setFillInIntent(fillInIntent)
       .setFlags(flagsValues, flagsMask)
       .build()
-    launch(request) { onActivityResult(it.resultCode, it.data) }
+    launch(request) {
+      onActivityResult(it.resultCode, it.data)
+    }
   }
 
   @SuppressLint("InlinedApi")

@@ -41,7 +41,7 @@ data class CropPictureRequest @JvmOverloads constructor(
   var outputX: Int = 512,
   var outputY: Int = 512,
   var outputContentValues: ContentValues = ContentValues(),
-  var onCreateIntent: (Intent) -> Unit = {}
+  var onCreateIntent: Callback1<Intent>? = null
 )
 
 class CropPictureLauncher(caller: ActivityResultCaller) :
@@ -53,7 +53,7 @@ class CropPictureLauncher(caller: ActivityResultCaller) :
     aspectX: Int = 1, aspectY: Int = 1,
     outputX: Int = 512, outputY: Int = 512,
     outputContentValues: ContentValues = ContentValues(),
-    onCreateIntent: (Intent) -> Unit = {},
+    onCreateIntent: Callback1<Intent>? = null,
     onActivityResult: Callback1<Uri?>
   ) {
     val request = CropPictureRequest(
@@ -88,8 +88,8 @@ class CropPictureContract : ActivityResultContract<CropPictureRequest, Uri>() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
           addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
+        input.onCreateIntent?.invoke(this)
       }
-      .apply(input.onCreateIntent)
 
   override fun parseResult(resultCode: Int, intent: Intent?): Uri? =
     if (resultCode == Activity.RESULT_OK) outputUri else null

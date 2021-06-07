@@ -29,5 +29,8 @@ import com.dylanc.callbacks.Callback1
 class TakePicturePreviewLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Void, Bitmap>(caller, TakePicturePreview()) {
 
-  fun launch(onActivityResult: Callback1<Bitmap?>) = launch(null) { onActivityResult(it) }
+  fun launch(onActivityResult: Callback1<Bitmap?>) =
+    launch(null) {
+      onActivityResult(it)
+    }
 }

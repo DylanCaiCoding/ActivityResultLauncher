@@ -38,7 +38,8 @@ class RequestPermissionLauncher(private val caller: ActivityResultCaller) :
     launch(permission) {
       when {
         it -> onGranted()
-        caller.shouldShowRequestPermissionRationale(permission) -> onExplainRequest?.invoke() ?: onDenied()
+        caller.shouldShowRequestPermissionRationale(permission) ->
+          onExplainRequest?.invoke() ?: onDenied()
         else -> onDenied()
       }
     }
