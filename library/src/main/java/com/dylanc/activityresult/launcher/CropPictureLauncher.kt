@@ -26,6 +26,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
@@ -54,15 +55,13 @@ class CropPictureLauncher(caller: ActivityResultCaller) :
     outputX: Int = 512, outputY: Int = 512,
     outputContentValues: ContentValues = ContentValues(),
     onCreateIntent: Callback1<Intent>? = null,
-    onActivityResult: Callback1<Uri?>
+    onActivityResult: ActivityResultCallback<Uri?>
   ) {
     val request = CropPictureRequest(
       inputUri, aspectX, aspectY, outputX,
       outputY, outputContentValues, onCreateIntent
     )
-    launch(request) {
-      onActivityResult(it)
-    }
+    launch(request, onActivityResult)
   }
 }
 

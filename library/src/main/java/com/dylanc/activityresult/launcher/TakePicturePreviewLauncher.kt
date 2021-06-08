@@ -19,9 +19,9 @@
 package com.dylanc.activityresult.launcher
 
 import android.graphics.Bitmap
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.TakePicturePreview
-import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
@@ -29,8 +29,5 @@ import com.dylanc.callbacks.Callback1
 class TakePicturePreviewLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Void, Bitmap>(caller, TakePicturePreview()) {
 
-  fun launch(onActivityResult: Callback1<Bitmap?>) =
-    launch(null) {
-      onActivityResult(it)
-    }
+  fun launch(onActivityResult: ActivityResultCallback<Bitmap?>) = launch(null, onActivityResult)
 }

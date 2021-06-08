@@ -33,7 +33,7 @@ public class BaseActivityResultLauncher<I, O> {
   private final androidx.activity.result.ActivityResultLauncher<I> launcher;
   private ActivityResultCallback<O> callback;
 
-  public BaseActivityResultLauncher(ActivityResultCaller caller, ActivityResultContract<I, O> contract) {
+  public BaseActivityResultLauncher(@NonNull ActivityResultCaller caller, @NonNull ActivityResultContract<I, O> contract) {
     launcher = caller.registerForActivityResult(contract, (result) -> {
       if (callback != null) {
         callback.onActivityResult(result);

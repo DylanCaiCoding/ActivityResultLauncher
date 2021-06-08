@@ -20,10 +20,10 @@ package com.dylanc.activityresult.launcher
 
 import android.Manifest
 import android.net.Uri
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.GetMultipleContents
 import com.dylanc.callbacks.Callback0
-import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
@@ -36,17 +36,13 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   @JvmOverloads
   fun launch(
     input: String,
-    onActivityResult: Callback1<List<Uri>>,
+    onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) {
     permissionLauncher.launch(
       Manifest.permission.READ_EXTERNAL_STORAGE,
-      onGranted = {
-        launch(input) {
-          onActivityResult(it)
-        }
-      },
+      onGranted = { launch(input, onActivityResult) },
       onPermissionDenied,
       onExplainRequestPermission
     )
@@ -54,21 +50,21 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
 
   @JvmOverloads
   fun launchForImage(
-    onActivityResult: Callback1<List<Uri>>,
+    onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
-    onActivityResult: Callback1<List<Uri>>,
+    onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForAudio(
-    onActivityResult: Callback1<List<Uri>>,
+    onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: (Callback0)? = null
   ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)

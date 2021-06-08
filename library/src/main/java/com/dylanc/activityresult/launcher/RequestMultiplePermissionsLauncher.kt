@@ -18,6 +18,7 @@
 
 package com.dylanc.activityresult.launcher
 
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import com.dylanc.callbacks.Callback0
@@ -29,11 +30,8 @@ import com.dylanc.callbacks.Callback1
 class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Array<String>, Map<String, Boolean>>(caller, RequestMultiplePermissions()) {
 
-  fun launch(vararg permissions: String, onActivityResult: Callback1<Map<String, Boolean>>) {
-    launch(arrayOf(*permissions)) {
-      onActivityResult(it)
-    }
-  }
+  fun launch(vararg permissions: String, onActivityResult: ActivityResultCallback<Map<String, Boolean>>) =
+    launch(arrayOf(*permissions),onActivityResult)
 
   @JvmOverloads
   fun launch(
