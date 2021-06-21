@@ -27,6 +27,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresPermission
+import com.dylanc.callbacks.Callback0
 
 /**
  * @author Dylan Cai
@@ -34,14 +35,29 @@ import androidx.annotation.RequiresPermission
 class EnableBluetoothLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Unit, Boolean>(caller, EnableBluetoothContract()) {
 
+  private val permissionLauncher = RequestPermissionLauncher(caller)
+
   @RequiresPermission(Manifest.permission.BLUETOOTH)
   fun launch(callback: ActivityResultCallback<Boolean>) {
-    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-    if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled) {
+    if (BluetoothAdapter.getDefaultAdapter()?.isEnabled != true) {
       launch(null, callback)
     } else {
-      callback.onActivityResult(false)
+      callback.onActivityResult(true)
     }
+  }
+
+  @RequiresPermission(Manifest.permission.BLUETOOTH)
+  fun launch(
+    onActivityResult: ActivityResultCallback<Boolean>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: (Callback0)? = null
+  ) {
+    permissionLauncher.launch(
+      Manifest.permission.ACCESS_FINE_LOCATION,
+      onGranted = { launch(onActivityResult) },
+      onDenied = onPermissionDenied,
+      onExplainRequest = onExplainRequestPermission
+    )
   }
 }
 

@@ -31,7 +31,7 @@ class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCalle
   BaseActivityResultLauncher<Array<String>, Map<String, Boolean>>(caller, RequestMultiplePermissions()) {
 
   fun launch(vararg permissions: String, onActivityResult: ActivityResultCallback<Map<String, Boolean>>) =
-    launch(arrayOf(*permissions),onActivityResult)
+    launch(arrayOf(*permissions), onActivityResult)
 
   @JvmOverloads
   fun launch(

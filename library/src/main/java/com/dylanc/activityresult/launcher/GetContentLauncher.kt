@@ -42,7 +42,7 @@ class GetContentLauncher(caller: ActivityResultCaller) :
   ) {
     permissionLauncher.launch(
       Manifest.permission.READ_EXTERNAL_STORAGE,
-      onGranted = { launch(input,onActivityResult) },
+      onGranted = { launch(input, onActivityResult) },
       onPermissionDenied,
       onExplainRequestPermission
     )
