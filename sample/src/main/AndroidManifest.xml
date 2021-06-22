@@ -3,6 +3,10 @@
   package="com.dylanc.activityresult.launcher.sample">
 
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.CALL_PHONE" />
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  <uses-permission android:name="android.permission.READ_CONTACTS" />
 
   <application
     android:allowBackup="true"

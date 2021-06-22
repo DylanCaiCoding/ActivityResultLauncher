@@ -1,113 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <Button
-    android:id="@+id/btn_take_picture"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="16dp"
-    android:text="take picture"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-  <Button
-    android:id="@+id/btn_take_picture_preview"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="take picture preview"
-    app:layout_constraintEnd_toEndOf="@+id/btn_take_picture"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_take_picture" />
+    <Button
+      android:id="@+id/btn_request_permission"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginEnd="16dp"
+      android:text="request permission" />
 
-  <Button
-    android:id="@+id/btn_select_picture"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="select picture"
-    app:layout_constraintEnd_toEndOf="@+id/btn_take_picture"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_take_picture_preview" />
+    <Button
+      android:id="@+id/btn_request_multiple_permissions"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="request multiple permissions" />
 
-  <Button
-    android:id="@+id/btn_take_video"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="take video"
-    app:layout_constraintEnd_toEndOf="@+id/btn_select_picture"
-    app:layout_constraintHorizontal_bias="0.543"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_select_picture" />
+    <Button
+      android:id="@+id/btn_take_picture"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="take picture" />
 
-  <Button
-    android:id="@+id/btn_pick_contact"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="pick contact"
-    app:layout_constraintEnd_toEndOf="@+id/btn_take_picture"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_take_video" />
+    <Button
+      android:id="@+id/btn_take_picture_preview"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="take picture preview" />
 
+    <Button
+      android:id="@+id/btn_select_picture"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="select picture" />
 
-  <Button
-    android:id="@+id/btn_create_document"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="create document"
-    app:layout_constraintEnd_toEndOf="@+id/btn_take_picture"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_pick_contact" />
+    <Button
+      android:id="@+id/btn_crop_picture"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="crop picture" />
 
-  <Button
-    android:id="@+id/btn_open_multiple_document"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="open multiple document"
-    app:layout_constraintEnd_toEndOf="@+id/btn_take_picture"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_create_document" />
+    <Button
+      android:id="@+id/btn_take_video"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="take video" />
 
-  <Button
-    android:id="@+id/btn_open_document_tree"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="open document tree"
-    app:layout_constraintEnd_toEndOf="@+id/btn_take_picture"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_open_multiple_document" />
+    <Button
+      android:id="@+id/btn_create_document"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="create document" />
 
 
-  <Button
-    android:id="@+id/btn_input_text"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="56dp"
-    android:text="input text"
-    app:layout_constraintEnd_toEndOf="@+id/btn_take_picture"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="@+id/btn_take_picture"
-    app:layout_constraintTop_toBottomOf="@+id/btn_open_multiple_document" />
+    <Button
+      android:id="@+id/btn_open_document"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="open document" />
 
-  <ImageView
-    android:id="@+id/iv_picture"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
-    android:layout_marginBottom="16dp"
-    android:scaleType="centerCrop"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+    <Button
+      android:id="@+id/btn_open_multiple_document"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="open multiple document" />
 
+    <Button
+      android:id="@+id/btn_open_document_tree"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="open document tree" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+      android:id="@+id/btn_pick_contact"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="pick contact" />
+
+    <Button
+      android:id="@+id/btn_enable_location"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="enable location" />
+
+    <Button
+      android:id="@+id/btn_enable_bluetooth"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="enable bluetooth" />
+
+    <Button
+      android:id="@+id/btn_input_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="custom input text" />
+
+    <ImageView
+      android:id="@+id/iv_picture"
+      android:layout_width="200dp"
+      android:layout_height="200dp"
+      android:layout_marginBottom="16dp"
+      android:scaleType="centerCrop"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+  </LinearLayout>
+</androidx.core.widget.NestedScrollView>

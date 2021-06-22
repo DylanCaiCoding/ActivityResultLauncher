@@ -2,6 +2,7 @@ package com.dylanc.activityresult.launcher.sample
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityMainBinding
 import com.dylanc.activityresult.launcher.sample.java.JavaSampleActivity
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this@MainActivity, JavaSampleActivity::class.java))
       }
     }
-
+//    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+//    startActivityForResult(intent, 887)
   }
 }
