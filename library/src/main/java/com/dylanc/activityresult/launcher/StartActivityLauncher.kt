@@ -46,7 +46,7 @@ class StartActivityLauncher(private val caller: ActivityResultCaller) :
     extras: Bundle? = null,
     onActivityResult: Callback2<Int, Intent?>
   ) {
-    val intent = Intent(caller.context, clazz)
+    val intent = Intent(context, clazz)
     extras?.let { intent.putExtras(it) }
     launch(intent, onActivityResult)
   }

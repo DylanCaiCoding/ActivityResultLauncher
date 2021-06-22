@@ -23,11 +23,14 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresPermission
+import androidx.annotation.StringRes
 import com.dylanc.callbacks.Callback0
+import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
@@ -35,7 +38,8 @@ import com.dylanc.callbacks.Callback0
 class EnableBluetoothLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Unit, Boolean>(caller, EnableBluetoothContract()) {
 
-  private val permissionLauncher = RequestPermissionLauncher(caller)
+  private val requestPermissionLauncher = RequestPermissionLauncher(caller)
+  private val enableLocationLauncher = EnableLocationLauncher(caller)
 
   @RequiresPermission(Manifest.permission.BLUETOOTH)
   fun launch(callback: ActivityResultCallback<Boolean>) {
@@ -46,18 +50,73 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
     }
   }
 
+  @JvmOverloads
   @RequiresPermission(Manifest.permission.BLUETOOTH)
   fun launch(
-    onActivityResult: ActivityResultCallback<Boolean>,
+    onBluetoothEnabled: ActivityResultCallback<Boolean>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) {
-    permissionLauncher.launch(
-      Manifest.permission.ACCESS_FINE_LOCATION,
-      onGranted = { launch(onActivityResult) },
-      onDenied = onPermissionDenied,
-      onExplainRequest = onExplainRequestPermission
+    launch {
+      if (it) {
+        requestPermissionLauncher.launch(
+          Manifest.permission.ACCESS_FINE_LOCATION,
+          onGranted = { onBluetoothEnabled.onActivityResult(true) },
+          onDenied = onPermissionDenied,
+          onExplainRequest = onExplainRequestPermission
+        )
+      } else {
+        onBluetoothEnabled.onActivityResult(false)
+      }
+    }
+  }
+
+  @JvmOverloads
+  @RequiresPermission(Manifest.permission.BLUETOOTH)
+  fun launchAndEnableLocation(
+    @StringRes enablePositionReason: Int,
+    onLocationEnabled: ActivityResultCallback<Boolean>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null,
+    onBluetoothDisabled: Callback0? = null
+  ) =
+    launchAndEnableLocation(
+      context.getString(enablePositionReason), onLocationEnabled, onPermissionDenied,
+      onExplainRequestPermission, onBluetoothDisabled
     )
+
+  @JvmOverloads
+  @RequiresPermission(Manifest.permission.BLUETOOTH)
+  fun launchAndEnableLocation(
+    enablePositionReason: String,
+    onLocationEnabled: ActivityResultCallback<Boolean>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null,
+    onBluetoothDisabled: Callback0? = null
+  ) =
+    launchAndEnableLocation(onLocationEnabled, onPermissionDenied, onExplainRequestPermission, onBluetoothDisabled, {
+      Toast.makeText(context, enablePositionReason, Toast.LENGTH_SHORT).show()
+      it.launch(onLocationEnabled)
+    })
+
+  @JvmOverloads
+  @RequiresPermission(Manifest.permission.BLUETOOTH)
+  fun launchAndEnableLocation(
+    onLocationEnabled: ActivityResultCallback<Boolean>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null,
+    onBluetoothDisabled: Callback0? = null,
+    onLocationDisabled: Callback1<EnableLocationLauncher>
+  ) {
+    launch({
+      if (it && !context.isLocationEnabled) {
+        onLocationDisabled(enableLocationLauncher)
+      } else if (it) {
+        onLocationEnabled.onActivityResult(true)
+      } else {
+        onBluetoothDisabled?.invoke()
+      }
+    }, onPermissionDenied, onExplainRequestPermission)
   }
 }
 

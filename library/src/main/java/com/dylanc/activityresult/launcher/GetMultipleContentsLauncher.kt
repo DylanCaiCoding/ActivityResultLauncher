@@ -38,7 +38,7 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
     input: String,
     onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) {
     permissionLauncher.launch(
       Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -52,20 +52,20 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   fun launchForImage(
     onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
     onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForAudio(
     onActivityResult: ActivityResultCallback<List<Uri>>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 }

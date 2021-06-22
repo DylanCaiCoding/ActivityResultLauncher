@@ -31,16 +31,16 @@ import com.dylanc.callbacks.Callback0
 class GetContentLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<String, Uri>(caller, GetContent()) {
 
-  private val permissionLauncher = RequestPermissionLauncher(caller)
+  private val requestPermissionLauncher = RequestPermissionLauncher(caller)
 
   @JvmOverloads
   fun launch(
     input: String,
     onActivityResult: ActivityResultCallback<Uri?>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) {
-    permissionLauncher.launch(
+    requestPermissionLauncher.launch(
       Manifest.permission.READ_EXTERNAL_STORAGE,
       onGranted = { launch(input, onActivityResult) },
       onPermissionDenied,
@@ -52,20 +52,20 @@ class GetContentLauncher(caller: ActivityResultCaller) :
   fun launchForImage(
     onActivityResult: ActivityResultCallback<Uri?>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
     onActivityResult: ActivityResultCallback<Uri?>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForAudio(
     onActivityResult: ActivityResultCallback<Uri?>,
     onPermissionDenied: Callback0,
-    onExplainRequestPermission: (Callback0)? = null
+    onExplainRequestPermission: Callback0? = null
   ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 }

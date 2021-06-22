@@ -43,19 +43,15 @@ class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCalle
     launch(*permissions) { result ->
       if (result.containsValue(false)) {
         val deniedList = result.filter { !it.value }.map { it.key }
-        val map = deniedList.groupBy { permission ->
-          if (caller.shouldShowRequestPermissionRationale(permission)) DENIED else EXPLAINED
+        val explainableList = deniedList.filter { caller.shouldShowRequestPermissionRationale(it) }
+        if (explainableList.isNotEmpty()) {
+          onExplainRequest?.invoke(explainableList) ?: onDenied(explainableList)
+        } else {
+          onDenied(deniedList)
         }
-        map[EXPLAINED]?.let { onExplainRequest?.invoke(it) ?: onDenied(it) }
-        map[DENIED]?.let { onDenied(it) }
       } else {
         onAllGranted()
       }
     }
-  }
-
-  companion object {
-    private const val DENIED = "DENIED"
-    private const val EXPLAINED = "EXPLAINED"
   }
 }

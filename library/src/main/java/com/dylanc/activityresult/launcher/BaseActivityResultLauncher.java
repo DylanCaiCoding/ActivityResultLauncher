@@ -17,6 +17,7 @@
 package com.dylanc.activityresult.launcher;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultCaller;
@@ -31,9 +32,11 @@ import androidx.core.app.ActivityOptionsCompat;
 public class BaseActivityResultLauncher<I, O> {
 
   private final androidx.activity.result.ActivityResultLauncher<I> launcher;
+  private final ActivityResultCaller caller;
   private ActivityResultCallback<O> callback;
 
   public BaseActivityResultLauncher(@NonNull ActivityResultCaller caller, @NonNull ActivityResultContract<I, O> contract) {
+    this.caller = caller;
     launcher = caller.registerForActivityResult(contract, (result) -> {
       if (callback != null) {
         callback.onActivityResult(result);
@@ -50,5 +53,9 @@ public class BaseActivityResultLauncher<I, O> {
                      @NonNull ActivityResultCallback<O> callback) {
     this.callback = callback;
     launcher.launch(input, options);
+  }
+
+  protected Context getContext() {
+    return ActivityResultCallerKt.getContext(caller);
   }
 }

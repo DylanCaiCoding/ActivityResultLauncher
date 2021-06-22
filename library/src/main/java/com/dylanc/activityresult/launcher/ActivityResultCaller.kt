@@ -33,9 +33,9 @@ internal fun ActivityResultCaller.shouldShowRequestPermissionRationale(permissio
     else -> false
   }
 
-internal val ActivityResultCaller.context
+val ActivityResultCaller.context
   get() = when (this) {
-    is ComponentActivity -> this
+    is Activity -> this
     is Fragment -> this.requireContext()
-    else -> throw IllegalAccessException()
+    else -> throw IllegalArgumentException("The constructor's ActivityResultCaller argument must be Activity or Fragment.")
   }

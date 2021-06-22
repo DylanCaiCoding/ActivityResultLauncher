@@ -33,7 +33,7 @@ class RequestPermissionLauncher(private val caller: ActivityResultCaller) :
     permission: String,
     onGranted: Callback0,
     onDenied: Callback0,
-    onExplainRequest: (Callback0)? = null
+    onExplainRequest: Callback0? = null
   ) {
     launch(permission) {
       when {
