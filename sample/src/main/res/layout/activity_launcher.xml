@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
@@ -44,20 +42,12 @@
       android:text="take picture preview" />
 
     <Button
-      android:id="@+id/btn_select_picture"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="select picture" />
-
-    <Button
       android:id="@+id/btn_crop_picture"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
-      android:text="crop picture" />
+      android:text="take picture and crop it" />
 
     <Button
       android:id="@+id/btn_take_video"
@@ -68,13 +58,36 @@
       android:text="take video" />
 
     <Button
+      android:id="@+id/btn_select_picture"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="select picture" />
+
+    <Button
+      android:id="@+id/btn_select_video"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="select video" />
+
+    <Button
+      android:id="@+id/btn_select_audio"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="select audio" />
+
+    <Button
       android:id="@+id/btn_create_document"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
       android:text="create document" />
-
 
     <Button
       android:id="@+id/btn_open_document"
@@ -131,18 +144,6 @@
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
       android:text="custom input text" />
-
-    <ImageView
-      android:id="@+id/iv_picture"
-      android:layout_width="200dp"
-      android:layout_height="200dp"
-      android:layout_marginBottom="16dp"
-      android:scaleType="centerCrop"
-      android:visibility="gone"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
   </LinearLayout>
 </androidx.core.widget.NestedScrollView>

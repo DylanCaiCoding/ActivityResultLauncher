@@ -44,7 +44,7 @@ public class JavaSampleActivity extends AppCompatActivity {
     takePictureLauncher.launch(uri,
         (takeSuccess) -> {
           if (takeSuccess) {
-            binding.ivPicture.setImageURI(uri);
+
           }
         });
   }

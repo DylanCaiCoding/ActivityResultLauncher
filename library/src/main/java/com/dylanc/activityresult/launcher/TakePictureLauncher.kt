@@ -21,9 +21,24 @@ package com.dylanc.activityresult.launcher
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.TakePicture
+import com.dylanc.callbacks.Callback2
+import java.io.File
 
 /**
  * @author Dylan Cai
  */
 class TakePictureLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Uri, Boolean>(caller, TakePicture())
+  BaseActivityResultLauncher<Uri, Boolean>(caller, TakePicture()) {
+
+  fun launch(onActivityResult: Callback2<Uri?, File?>) {
+    val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.jpg")
+    val uri = file.toUri(context)
+    launch(uri) {
+      if (it) {
+        onActivityResult(uri, file)
+      } else {
+        onActivityResult(null, null)
+      }
+    }
+  }
+}

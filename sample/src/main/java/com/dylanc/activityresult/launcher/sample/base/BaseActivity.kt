@@ -29,12 +29,12 @@ abstract class BaseActivity : AppCompatActivity() {
       .show()
   }
 
-  protected fun createUri(filename: String): Uri {
-    val file = File(externalCacheDir, filename)
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      FileProvider.getUriForFile(application, "$packageName.provider", file)
-    } else {
-      Uri.fromFile(file)
-    }
-  }
+//  protected fun createUri(filename: String): Uri {
+//    val file = File(externalCacheDir, filename)
+//    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//      FileProvider.getUriForFile(application, "$packageName.provider", file)
+//    } else {
+//      Uri.fromFile(file)
+//    }
+//  }
 }

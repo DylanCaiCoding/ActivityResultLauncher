@@ -20,11 +20,28 @@ package com.dylanc.activityresult.launcher
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.TakeVideo
+import androidx.core.content.FileProvider
+import com.dylanc.callbacks.Callback2
+import java.io.File
 
 /**
  * @author Dylan Cai
  */
 class TakeVideoLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Uri, Bitmap>(caller, TakeVideo())
+  BaseActivityResultLauncher<Uri, Bitmap>(caller, TakeVideo()) {
+
+  fun launch(onActivityResult: Callback2<Uri?, File?>) {
+    val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.mp4")
+    val uri = file.toUri(context)
+    launch(uri) {
+      if (file.length() > 0) {
+        onActivityResult(uri, file)
+      } else {
+        onActivityResult(null, null)
+      }
+    }
+  }
+}

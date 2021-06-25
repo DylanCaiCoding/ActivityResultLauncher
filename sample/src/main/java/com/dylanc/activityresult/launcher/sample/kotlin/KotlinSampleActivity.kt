@@ -40,9 +40,11 @@ class KotlinSampleActivity : BaseActivity() {
       btnRequestMultiplePermissions.setOnClickListener { requestMultiplePermissions() }
       btnTakePicture.setOnClickListener { takePicture() }
       btnTakePicturePreview.setOnClickListener { takePicturePreview() }
-      btnSelectPicture.setOnClickListener { selectPicture() }
-      btnCropPicture.setOnClickListener { cropPicture() }
+      btnCropPicture.setOnClickListener { takePictureAndCropIt() }
       btnTakeVideo.setOnClickListener { takeVideo() }
+      btnSelectPicture.setOnClickListener { selectPicture() }
+      btnSelectVideo.setOnClickListener { selectVideo() }
+      btnSelectAudio.setOnClickListener { selectAudio() }
       btnCreateDocument.setOnClickListener { createDocument() }
       btnOpenDocument.setOnClickListener { openDocument() }
       btnOpenMultipleDocument.setOnClickListener { openMultipleDocuments() }
@@ -99,27 +101,48 @@ class KotlinSampleActivity : BaseActivity() {
   }
 
   private fun takePicture() {
-    val uri = createUri("test.jpg")
-    takePictureLauncher.launch(uri) {
-      if (it) {
-        cropPictureLauncher.launch(uri) { outputUri ->
-          binding.ivPicture.setImageURI(outputUri)
-        }
+    takePictureLauncher.launch { uri, file ->
+      if (uri != null && file != null) {
+        toast(file.path)
       }
     }
   }
 
   private fun takePicturePreview() {
     takePicturePreviewLauncher.launch {
-      binding.ivPicture.setImageBitmap(it)
+//      binding.ivPicture.setImageBitmap(it)
+    }
+  }
+
+  private fun takePictureAndCropIt() {
+    takePictureLauncher.launch { uri, file ->
+      if (uri != null) {
+        cropPictureLauncher.launch(uri) { _, croppedFile ->
+          file?.delete()
+          if (croppedFile != null) {
+            toast(croppedFile.path)
+            croppedFile.delete()
+          }
+        }
+      }
+    }
+  }
+
+  private fun takeVideo() {
+    takeVideoLauncher.launch { uri, file ->
+      if (uri != null && file != null) {
+        toast(file.path)
+        file.delete()
+      }
     }
   }
 
   private fun selectPicture() {
     getContentLauncher.launchForImage(
-      onActivityResult = { uri ->
-        if (uri != null) {
-          binding.ivPicture.setImageURI(uri)
+      onActivityResult = { uri, file ->
+        if (uri != null && file != null) {
+          toast(file.path)
+          file.delete()
         }
       },
       onPermissionDenied = {
@@ -128,13 +151,12 @@ class KotlinSampleActivity : BaseActivity() {
     )
   }
 
-  private fun cropPicture() {
-    getContentLauncher.launchForImage(
-      onActivityResult = { uri ->
-        if (uri != null) {
-          cropPictureLauncher.launch(uri) {
-
-          }
+  private fun selectVideo() {
+    getContentLauncher.launchForVideo(
+      onActivityResult = { uri, file ->
+        if (uri != null && file != null) {
+          toast(file.path)
+          file.delete()
         }
       },
       onPermissionDenied = {
@@ -143,11 +165,18 @@ class KotlinSampleActivity : BaseActivity() {
     )
   }
 
-  private fun takeVideo() {
-    val uri = createUri("test.mp4")
-    takeVideoLauncher.launch(uri) {
-      binding.ivPicture.setImageURI(uri)
-    }
+  private fun selectAudio() {
+    getContentLauncher.launchForAudio(
+      onActivityResult = { uri, file ->
+        if (uri != null && file != null) {
+          toast(file.path)
+          file.delete()
+        }
+      },
+      onPermissionDenied = {
+        Toast.makeText(this, R.string.no_read_permission, Toast.LENGTH_SHORT).show()
+      }
+    )
   }
 
   private fun createDocument() {
@@ -197,16 +226,6 @@ class KotlinSampleActivity : BaseActivity() {
     }
   }
 
-  private fun enableLocation() {
-    enableLocationLauncher.launch {
-      if (it) {
-        toast("Location is enabled")
-      } else {
-        toast("Location is disabled")
-      }
-    }
-  }
-
   private fun enableBluetooth() {
     enableBluetoothLauncher.launchAndEnableLocation(
       R.string.enable_location_reason,
@@ -224,6 +243,16 @@ class KotlinSampleActivity : BaseActivity() {
 //        }
 //      }
     )
+  }
+
+  private fun enableLocation() {
+    enableLocationLauncher.launch {
+      if (it) {
+        toast("Location is enabled")
+      } else {
+        toast("Location is disabled")
+      }
+    }
   }
 
 
