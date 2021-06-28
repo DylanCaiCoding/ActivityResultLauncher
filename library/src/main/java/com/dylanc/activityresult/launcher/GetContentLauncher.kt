@@ -35,6 +35,21 @@ class GetContentLauncher(caller: ActivityResultCaller) :
 
   private val requestPermissionLauncher = RequestPermissionLauncher(caller)
 
+  @JvmOverloads
+  fun launch(
+    input: String,
+    onActivityResult: ActivityResultCallback<Uri?>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null
+  ) {
+    requestPermissionLauncher.launch(
+      Manifest.permission.READ_EXTERNAL_STORAGE,
+      onGranted = { launch(input, onActivityResult) },
+      onPermissionDenied,
+      onExplainRequestPermission
+    )
+  }
+
   fun launch(input: String?, onActivityResult: Callback2<Uri?, File?>) {
     launch(input) { uri ->
       if (uri != null) {
@@ -48,21 +63,6 @@ class GetContentLauncher(caller: ActivityResultCaller) :
   @JvmOverloads
   fun launch(
     input: String,
-    onActivityResult: ActivityResultCallback<Uri?>,
-    onPermissionDenied: Callback0,
-    onExplainRequestPermission: Callback0? = null
-  ) {
-    requestPermissionLauncher.launch(
-      Manifest.permission.READ_EXTERNAL_STORAGE,
-      onGranted = { launch(input, onActivityResult) },
-      onPermissionDenied,
-      onExplainRequestPermission
-    )
-  }
-
-  @JvmOverloads
-  fun launch(
-    input: String,
     onActivityResult: Callback2<Uri?, File?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
@@ -83,8 +83,22 @@ class GetContentLauncher(caller: ActivityResultCaller) :
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
+  fun launchForImage(
+    onActivityResult: Callback2<Uri?, File?>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null
+  ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
+
+  @JvmOverloads
   fun launchForVideo(
     onActivityResult: ActivityResultCallback<Uri?>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null
+  ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
+
+  @JvmOverloads
+  fun launchForVideo(
+    onActivityResult: Callback2<Uri?, File?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
@@ -95,20 +109,6 @@ class GetContentLauncher(caller: ActivityResultCaller) :
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
-
-  @JvmOverloads
-  fun launchForImage(
-    onActivityResult: Callback2<Uri?, File?>,
-    onPermissionDenied: Callback0,
-    onExplainRequestPermission: Callback0? = null
-  ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
-
-  @JvmOverloads
-  fun launchForVideo(
-    onActivityResult: Callback2<Uri?, File?>,
-    onPermissionDenied: Callback0,
-    onExplainRequestPermission: Callback0? = null
-  ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForAudio(

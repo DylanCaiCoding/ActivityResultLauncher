@@ -19,6 +19,7 @@
 package com.dylanc.activityresult.launcher
 
 import android.net.Uri
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 
@@ -26,4 +27,9 @@ import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
  * @author Dylan Cai
  */
 class OpenDocumentLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Array<String>, Uri>(caller, OpenDocument())
+  BaseActivityResultLauncher<Array<String>, Uri>(caller, OpenDocument()) {
+
+  fun launch(vararg input: String, callback: ActivityResultCallback<Uri>) {
+    launch(arrayOf(*input), callback)
+  }
+}

@@ -30,7 +30,6 @@ import androidx.activity.result.contract.ActivityResultContract
  * @author Dylan Cai
  */
 
-
 val Context.isLocationEnabled: Boolean
   get() = (getSystemService(Context.LOCATION_SERVICE) as LocationManager)
     .isProviderEnabled(LocationManager.GPS_PROVIDER)

@@ -19,6 +19,7 @@
 package com.dylanc.activityresult.launcher
 
 import android.net.Uri
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.OpenMultipleDocuments
 
@@ -26,4 +27,9 @@ import androidx.activity.result.contract.ActivityResultContracts.OpenMultipleDoc
  * @author Dylan Cai
  */
 class OpenMultipleDocumentsLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Array<String>, List<Uri>>(caller, OpenMultipleDocuments())
+  BaseActivityResultLauncher<Array<String>, List<Uri>>(caller, OpenMultipleDocuments()) {
+
+  fun launch(vararg input: String, callback: ActivityResultCallback<List<Uri>>) {
+    launch(arrayOf(*input), callback)
+  }
+}

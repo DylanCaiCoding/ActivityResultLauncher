@@ -19,6 +19,7 @@
 package com.dylanc.activityresult.launcher
 
 import android.net.Uri
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 
@@ -26,4 +27,9 @@ import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
  * @author Dylan Cai
  */
 class CreateDocumentLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<String, Uri>(caller, CreateDocument())
+  BaseActivityResultLauncher<String, Uri>(caller, CreateDocument()) {
+
+  fun launch(callback: ActivityResultCallback<Uri>) {
+    launch(null, callback)
+  }
+}

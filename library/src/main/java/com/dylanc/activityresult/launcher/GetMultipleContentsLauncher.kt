@@ -24,6 +24,8 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.GetMultipleContents
 import com.dylanc.callbacks.Callback0
+import com.dylanc.callbacks.Callback2
+import java.io.File
 
 /**
  * @author Dylan Cai
@@ -37,6 +39,28 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   fun launch(
     input: String,
     onActivityResult: ActivityResultCallback<List<Uri>>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null
+  ) {
+    permissionLauncher.launch(
+      Manifest.permission.READ_EXTERNAL_STORAGE,
+      onGranted = { launch(input, onActivityResult) },
+      onPermissionDenied,
+      onExplainRequestPermission
+    )
+  }
+  fun launch(input: String?, onActivityResult: Callback2<List<Uri>, List<File>>) {
+    launch(input) { uris ->
+      if (uris.isNotEmpty()) {
+        onActivityResult(uris, uris.map { it.copyToCacheFile(context) })
+      }
+    }
+  }
+
+  @JvmOverloads
+  fun launch(
+    input: String,
+    onActivityResult: Callback2<List<Uri>, List<File>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) {
@@ -65,6 +89,28 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   @JvmOverloads
   fun launchForAudio(
     onActivityResult: ActivityResultCallback<List<Uri>>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null
+  ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
+
+
+  @JvmOverloads
+  fun launchForImage(
+    onActivityResult: Callback2<List<Uri>, List<File>>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null
+  ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
+
+  @JvmOverloads
+  fun launchForVideo(
+    onActivityResult: Callback2<List<Uri>, List<File>>,
+    onPermissionDenied: Callback0,
+    onExplainRequestPermission: Callback0? = null
+  ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
+
+  @JvmOverloads
+  fun launchForAudio(
+    onActivityResult: Callback2<List<Uri>, List<File>>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)

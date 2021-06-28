@@ -94,15 +94,18 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
     onExplainRequestPermission: Callback0? = null,
     onBluetoothDisabled: Callback0? = null
   ) =
-    launchAndEnableLocation(onLocationEnabled, onPermissionDenied, onExplainRequestPermission, onBluetoothDisabled, {
-      Toast.makeText(context, enablePositionReason, Toast.LENGTH_SHORT).show()
-      it.launch(onLocationEnabled)
-    })
+    launchAndEnableLocation(
+      { onLocationEnabled.onActivityResult(true) },
+      onPermissionDenied, onExplainRequestPermission, onBluetoothDisabled,
+      {
+        Toast.makeText(context, enablePositionReason, Toast.LENGTH_SHORT).show()
+        it.launch(onLocationEnabled)
+      })
 
   @JvmOverloads
   @RequiresPermission(Manifest.permission.BLUETOOTH)
   fun launchAndEnableLocation(
-    onLocationEnabled: ActivityResultCallback<Boolean>,
+    onLocationEnabled: Callback0,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null,
     onBluetoothDisabled: Callback0? = null,
@@ -112,7 +115,7 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
       if (it && !context.isLocationEnabled) {
         onLocationDisabled(enableLocationLauncher)
       } else if (it) {
-        onLocationEnabled.onActivityResult(true)
+        onLocationEnabled()
       } else {
         onBluetoothDisabled?.invoke()
       }

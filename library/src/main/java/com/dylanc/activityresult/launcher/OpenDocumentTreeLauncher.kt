@@ -19,6 +19,7 @@
 package com.dylanc.activityresult.launcher
 
 import android.net.Uri
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTree
 
@@ -26,4 +27,9 @@ import androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTre
  * @author Dylan Cai
  */
 class OpenDocumentTreeLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<Uri, Uri>(caller, OpenDocumentTree())
+  BaseActivityResultLauncher<Uri, Uri>(caller, OpenDocumentTree()) {
+
+  fun launch(callback: ActivityResultCallback<Uri>) {
+    launch(null, callback)
+  }
+}
