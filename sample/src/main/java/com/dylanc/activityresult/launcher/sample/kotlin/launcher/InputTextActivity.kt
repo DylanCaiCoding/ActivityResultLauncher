@@ -5,16 +5,17 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityInputTextBinding
+import com.dylanc.viewbinding.binding
 
 class InputTextActivity : AppCompatActivity() {
 
-  private lateinit var binding: ActivityInputTextBinding
+  private val binding: ActivityInputTextBinding by binding()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = ActivityInputTextBinding.inflate(layoutInflater)
-    setContentView(binding.root)
     with(binding) {
+      supportActionBar?.setDisplayHomeAsUpEnabled(true)
+      supportActionBar?.setDisplayShowHomeEnabled(true)
       title = intent.getStringExtra(InputTextResultContract.KEY_TITLE)
       tvName.text = intent.getStringExtra(InputTextResultContract.KEY_NAME)
       edtValue.hint = intent.getStringExtra(InputTextResultContract.KEY_HINT)
@@ -37,5 +38,10 @@ class InputTextActivity : AppCompatActivity() {
       setResult(RESULT_OK, intent)
       finish()
     }
+  }
+
+  override fun onSupportNavigateUp(): Boolean {
+    onBackPressed()
+    return true
   }
 }

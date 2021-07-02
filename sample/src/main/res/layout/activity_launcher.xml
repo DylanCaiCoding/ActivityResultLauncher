@@ -26,20 +26,20 @@
       android:text="request multiple permissions" />
 
     <Button
-      android:id="@+id/btn_take_picture"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="take picture" />
-
-    <Button
       android:id="@+id/btn_take_picture_preview"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
       android:text="take picture preview" />
+
+    <Button
+      android:id="@+id/btn_take_picture"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="take picture" />
 
     <Button
       android:id="@+id/btn_crop_picture"
@@ -58,28 +58,52 @@
       android:text="take video" />
 
     <Button
-      android:id="@+id/btn_select_picture"
+      android:id="@+id/btn_get_picture"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
-      android:text="select picture" />
+      android:text="get picture" />
 
     <Button
-      android:id="@+id/btn_select_video"
+      android:id="@+id/btn_get_video"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
-      android:text="select video" />
+      android:text="get video" />
 
     <Button
-      android:id="@+id/btn_select_audio"
+      android:id="@+id/btn_get_multiple_picture"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
-      android:text="select audio" />
+      android:text="get multiple picture" />
+
+    <Button
+      android:id="@+id/btn_get_multiple_video"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="get multiple video" />
+
+    <Button
+      android:id="@+id/btn_enable_bluetooth"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="enable bluetooth" />
+
+    <Button
+      android:id="@+id/btn_enable_location"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="enable location" />
 
     <Button
       android:id="@+id/btn_create_document"
@@ -120,22 +144,6 @@
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
       android:text="pick contact" />
-
-    <Button
-      android:id="@+id/btn_enable_location"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="enable location" />
-
-    <Button
-      android:id="@+id/btn_enable_bluetooth"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="enable bluetooth" />
 
     <Button
       android:id="@+id/btn_input_text"

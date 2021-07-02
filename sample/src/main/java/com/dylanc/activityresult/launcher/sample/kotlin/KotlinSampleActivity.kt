@@ -3,22 +3,28 @@ package com.dylanc.activityresult.launcher.sample.kotlin
 import android.Manifest
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.widget.Toast
+import android.provider.OpenableColumns
+import androidx.annotation.StringRes
+import androidx.documentfile.provider.DocumentFile
 import com.dylanc.activityresult.launcher.*
 import com.dylanc.activityresult.launcher.sample.R
 import com.dylanc.activityresult.launcher.sample.base.BaseActivity
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityLauncherBinding
 import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextLauncher
+import com.dylanc.activityresult.launcher.sample.widget.PictureDialogFragment
+import com.dylanc.viewbinding.binding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class KotlinSampleActivity : BaseActivity() {
 
-  private lateinit var binding: ActivityLauncherBinding
+  private val binding: ActivityLauncherBinding by binding()
   private val requestPermissionLauncher = RequestPermissionLauncher(this)
   private val requestMultiplePermissionsLauncher = RequestMultiplePermissionsLauncher(this)
   private val takePictureLauncher = TakePictureLauncher(this)
   private val takePicturePreviewLauncher = TakePicturePreviewLauncher(this)
   private val getContentLauncher = GetContentLauncher(this)
+  private val getMultipleContentsLauncher = GetMultipleContentsLauncher(this)
   private val cropPictureLauncher = CropPictureLauncher(this)
   private val takeVideoLauncher = TakeVideoLauncher(this)
   private val createDocumentLauncher = CreateDocumentLauncher(this)
@@ -29,12 +35,9 @@ class KotlinSampleActivity : BaseActivity() {
   private val enableBluetoothLauncher = EnableBluetoothLauncher(this)
   private val enableLocationLauncher = EnableLocationLauncher(this)
   private val inputTextLauncher = InputTextLauncher(this)
-//  private val startActivityLauncher = StartActivityLauncher(this)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = ActivityLauncherBinding.inflate(layoutInflater)
-    setContentView(binding.root)
     with(binding) {
       btnRequestPermission.setOnClickListener { requestPermission() }
       btnRequestMultiplePermissions.setOnClickListener { requestMultiplePermissions() }
@@ -42,9 +45,10 @@ class KotlinSampleActivity : BaseActivity() {
       btnTakePicturePreview.setOnClickListener { takePicturePreview() }
       btnCropPicture.setOnClickListener { takePictureAndCropIt() }
       btnTakeVideo.setOnClickListener { takeVideo() }
-      btnSelectPicture.setOnClickListener { selectPicture() }
-      btnSelectVideo.setOnClickListener { selectVideo() }
-      btnSelectAudio.setOnClickListener { selectAudio() }
+      btnGetPicture.setOnClickListener { getPicture() }
+      btnGetVideo.setOnClickListener { getVideo() }
+      btnGetMultiplePicture.setOnClickListener { getMultiplePicture() }
+      btnGetMultipleVideo.setOnClickListener { getMultipleVideo() }
       btnCreateDocument.setOnClickListener { createDocument() }
       btnOpenDocument.setOnClickListener { openDocument() }
       btnOpenMultipleDocument.setOnClickListener { openMultipleDocuments() }
@@ -62,11 +66,11 @@ class KotlinSampleActivity : BaseActivity() {
         toast(getString(R.string.location_permission_granted))
       },
       onDenied = {
-        toast(getString(R.string.location_permission_denied))
+        toast(getString(R.string.no_location_permission))
       },
       onExplainRequest = {
-        showDialog(getString(R.string.Tip), getString(R.string.no_location_permission)) {
-          requestMultiplePermissions()
+        showDialog(R.string.Tip, R.string.need_location_permission) {
+          requestPermission()
         }
       }
     )
@@ -79,21 +83,21 @@ class KotlinSampleActivity : BaseActivity() {
       onAllGranted = {
         toast(getString(R.string.location_and_read_permissions_granted))
       },
-      onDenied = {
+      onDenied = { list ->
         val message = when {
-          it.size == 2 -> R.string.need_location_and_read_permissions
-          it.first() == Manifest.permission.ACCESS_FINE_LOCATION -> R.string.need_location_permission
+          list.size == 2 -> R.string.need_location_and_read_permissions
+          list.first() == Manifest.permission.ACCESS_FINE_LOCATION -> R.string.need_location_permission
           else -> R.string.need_read_permission
         }
-        toast(getString(message))
+        toast(message)
       },
-      onExplainRequest = {
+      onExplainRequest = { list ->
         val message = when {
-          it.size == 2 -> R.string.need_location_and_read_permissions
-          it.first() == Manifest.permission.ACCESS_FINE_LOCATION -> R.string.need_location_permission
+          list.size == 2 -> R.string.need_location_and_read_permissions
+          list.first() == Manifest.permission.ACCESS_FINE_LOCATION -> R.string.need_location_permission
           else -> R.string.need_read_permission
         }
-        showDialog(getString(R.string.Tip), getString(message)) {
+        showDialog(R.string.Tip, message) {
           requestMultiplePermissions()
         }
       }
@@ -103,25 +107,26 @@ class KotlinSampleActivity : BaseActivity() {
   private fun takePicture() {
     takePictureLauncher.launch { uri, file ->
       if (uri != null && file != null) {
-        toast(file.path)
+        PictureDialogFragment(uri, file).show(supportFragmentManager)
       }
     }
   }
 
   private fun takePicturePreview() {
-    takePicturePreviewLauncher.launch {
-//      binding.ivPicture.setImageBitmap(it)
+    takePicturePreviewLauncher.launch { bitmap ->
+      if (bitmap != null) {
+        PictureDialogFragment(bitmap).show(supportFragmentManager)
+      }
     }
   }
 
   private fun takePictureAndCropIt() {
     takePictureLauncher.launch { uri, file ->
       if (uri != null) {
-        cropPictureLauncher.launch(uri) { _, croppedFile ->
+        cropPictureLauncher.launch(uri) { croppedUri, croppedFile ->
           file?.delete()
-          if (croppedFile != null) {
-            toast(croppedFile.path)
-            croppedFile.delete()
+          if (croppedUri != null && croppedFile != null) {
+            PictureDialogFragment(croppedUri, croppedFile).show(supportFragmentManager)
           }
         }
       }
@@ -131,95 +136,136 @@ class KotlinSampleActivity : BaseActivity() {
   private fun takeVideo() {
     takeVideoLauncher.launch { uri, file ->
       if (uri != null && file != null) {
-        toast(file.path)
-        file.delete()
+        PictureDialogFragment(uri, file).show(supportFragmentManager)
       }
     }
   }
 
-  private fun selectPicture() {
+  private fun getPicture() {
     getContentLauncher.launchForImage(
       onActivityResult = { uri, file ->
         if (uri != null && file != null) {
-          toast(file.path)
-          file.delete()
+          PictureDialogFragment(uri, file).show(supportFragmentManager)
         }
       },
       onPermissionDenied = {
-        Toast.makeText(this, R.string.no_read_permission, Toast.LENGTH_SHORT).show()
+        toast(R.string.no_read_permission)
+      },
+      onExplainRequestPermission = {
+        showDialog(R.string.Tip, R.string.need_read_permission) {
+          getPicture()
+        }
       }
     )
   }
 
-  private fun selectVideo() {
+  private fun getVideo() {
     getContentLauncher.launchForVideo(
       onActivityResult = { uri, file ->
         if (uri != null && file != null) {
-          toast(file.path)
-          file.delete()
+          PictureDialogFragment(uri, file).show(supportFragmentManager)
         }
       },
       onPermissionDenied = {
-        Toast.makeText(this, R.string.no_read_permission, Toast.LENGTH_SHORT).show()
+        toast(R.string.no_read_permission)
       }
     )
   }
 
-  private fun selectAudio() {
-    getContentLauncher.launchForAudio(
-      onActivityResult = { uri, file ->
-        if (uri != null && file != null) {
-          toast(file.path)
-          file.delete()
+  private fun getMultiplePicture() {
+    getMultipleContentsLauncher.launchForImage(
+      onActivityResult = { _, files ->
+        if (files.isNotEmpty()) {
+          showItems(R.string.selected_files, files.map { it.name })
         }
       },
       onPermissionDenied = {
-        Toast.makeText(this, R.string.no_read_permission, Toast.LENGTH_SHORT).show()
+        toast(R.string.no_read_permission)
+      },
+      onExplainRequestPermission = {
+        showDialog(R.string.Tip, R.string.need_read_permission) {
+          getMultiplePicture()
+        }
+      }
+    )
+  }
+
+  private fun getMultipleVideo() {
+    getMultipleContentsLauncher.launchForVideo(
+      onActivityResult = { _, files ->
+        if (files.isNotEmpty()) {
+          showItems(R.string.selected_files, files.map { it.name })
+        }
+      },
+      onPermissionDenied = {
+        toast(R.string.no_read_permission)
+      },
+      onExplainRequestPermission = {
+        showDialog(R.string.Tip, R.string.need_read_permission) {
+          getMultipleVideo()
+        }
       }
     )
   }
 
   private fun createDocument() {
-    createDocumentLauncher.launch(null) {
-      if (it != null) {
-        Toast.makeText(this, it.path, Toast.LENGTH_SHORT).show()
+    createDocumentLauncher.launch { uri ->
+      if (uri != null) {
+        contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+          if (cursor.moveToFirst()) {
+            val name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+            toast("create $name")
+          }
+        }
       }
     }
   }
 
   private fun openDocument() {
-    openDocumentLauncher.launch(arrayOf()) {
-      if (it != null) {
-        Toast.makeText(this, it.path, Toast.LENGTH_SHORT).show()
+    openDocumentLauncher.launch("application/*") { uri ->
+      if (uri != null) {
+        contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+          if (cursor.moveToFirst()) {
+            val name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+            toast(name)
+          }
+        }
       }
     }
   }
 
   private fun openMultipleDocuments() {
-    openMultipleDocumentsLauncher.launch(arrayOf()) {
-      if (it.isNullOrEmpty()) {
-        Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+    openMultipleDocumentsLauncher.launch("application/*") { uris ->
+      if (uris.isNotEmpty()) {
+        val names = uris.map {
+          contentResolver.query(it, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+            cursor.moveToFirst()
+            cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+          }.orEmpty()
+        }
+        showItems(R.string.documents, names)
       }
     }
   }
 
   private fun openDocumentTree() {
-    openDocumentTreeLauncher.launch(null) {
-      if (it != null) {
-        Toast.makeText(this, it.path, Toast.LENGTH_SHORT).show()
+    openDocumentTreeLauncher.launch { uri ->
+      if (uri != null) {
+        val documentFile = DocumentFile.fromTreeUri(this, uri)!!
+        val names = documentFile.listFiles().map { it.name.orEmpty() }
+        showItems(R.string.documents, names)
       }
     }
   }
 
+
   private fun pickContact() {
-    pickContactLauncher.launch {
-      if (it != null) {
-        val projection = arrayOf(ContactsContract.Data.DISPLAY_NAME)
-        contentResolver.query(it, projection, null, null, null)?.use { cursor ->
+    pickContactLauncher.launch { uri ->
+      if (uri != null) {
+        contentResolver.query(uri, arrayOf(ContactsContract.Data.DISPLAY_NAME), null, null, null)?.use { cursor ->
           if (cursor.moveToFirst()) {
-            val nameIndex = cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME)
-            val name = cursor.getString(nameIndex)
-            Toast.makeText(this, name, Toast.LENGTH_SHORT).show()
+            val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME))
+            toast(name)
           }
         }
       }
@@ -231,35 +277,34 @@ class KotlinSampleActivity : BaseActivity() {
       R.string.enable_location_reason,
       onLocationEnabled = { enabled ->
         if (enabled) {
-          Toast.makeText(this, "Bluetooth enabled", Toast.LENGTH_SHORT).show()
+          toast("Bluetooth enabled")
         }
       },
       onPermissionDenied = {
-        Toast.makeText(this, "Please grant location permission to use Bluetooth", Toast.LENGTH_SHORT).show()
+        toast("Please grant location permission to use Bluetooth")
       },
-//      onLocationDisabled = {
-//        showDialog(getString(R.string.Tip), getString(R.string.enable_location_reason)) {
-//          it.launch { enableBluetooth() }
-//        }
-//      }
+      onExplainRequestPermission = {
+        showDialog(R.string.Tip, R.string.need_location_permission) {
+          enableBluetooth()
+        }
+      }
     )
   }
 
   private fun enableLocation() {
-    enableLocationLauncher.launch {
-      if (it) {
-        toast("Location is enabled")
+    enableLocationLauncher.launch { enabled ->
+      if (enabled) {
+        toast(R.string.location_enabled)
       } else {
-        toast("Location is disabled")
+        toast(R.string.location_disabled)
       }
     }
   }
 
-
   private fun inputText() {
-    inputTextLauncher.launch("name", "Input name") {
-      if (it != null) {
-        toast(it)
+    inputTextLauncher.launch(name = "name", title = "Input name") { value ->
+      if (value != null) {
+        toast(value)
       }
     }
   }
