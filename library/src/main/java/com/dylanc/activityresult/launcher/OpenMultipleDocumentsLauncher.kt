@@ -29,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts.OpenMultipleDoc
 class OpenMultipleDocumentsLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Array<String>, List<Uri>>(caller, OpenMultipleDocuments()) {
 
+  @JvmName("launch2")
   fun launch(vararg input: String, callback: ActivityResultCallback<List<Uri>>) {
     launch(arrayOf(*input), callback)
   }

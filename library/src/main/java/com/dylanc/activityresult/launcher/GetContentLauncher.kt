@@ -102,18 +102,4 @@ class GetContentLauncher(caller: ActivityResultCaller) :
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
-
-  @JvmOverloads
-  fun launchForAudio(
-    onActivityResult: ActivityResultCallback<Uri?>,
-    onPermissionDenied: Callback0,
-    onExplainRequestPermission: Callback0? = null
-  ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
-
-  @JvmOverloads
-  fun launchForAudio(
-    onActivityResult: Callback2<Uri?, File?>,
-    onPermissionDenied: Callback0,
-    onExplainRequestPermission: Callback0? = null
-  ) = launch("audio/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 }

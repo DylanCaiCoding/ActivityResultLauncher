@@ -1,28 +1,15 @@
-/*
- * Copyright (c) 2021. Dylan Cai
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 @file:Suppress("unused")
 
 package com.dylanc.activityresult.launcher
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts.GetMultipleContents
+import androidx.activity.result.contract.ActivityResultContract
 import com.dylanc.callbacks.Callback0
 import com.dylanc.callbacks.Callback2
 import java.io.File
@@ -30,19 +17,19 @@ import java.io.File
 /**
  * @author Dylan Cai
  */
-class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
-  BaseActivityResultLauncher<String, List<Uri>>(caller, GetMultipleContents()) {
+class PickContentLauncher(caller: ActivityResultCaller) :
+  BaseActivityResultLauncher<String, Uri>(caller, PickContentContract()) {
 
-  private val permissionLauncher = RequestPermissionLauncher(caller)
+  private val requestPermissionLauncher = RequestPermissionLauncher(caller)
 
   @JvmOverloads
   fun launch(
     input: String,
-    onActivityResult: ActivityResultCallback<List<Uri>>,
+    onActivityResult: ActivityResultCallback<Uri?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) {
-    permissionLauncher.launch(
+    requestPermissionLauncher.launch(
       Manifest.permission.READ_EXTERNAL_STORAGE,
       onGranted = { launch(input, onActivityResult) },
       onPermissionDenied,
@@ -50,10 +37,12 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
     )
   }
 
-  fun launch(input: String?, onActivityResult: Callback2<List<Uri>, List<File>>) {
-    launch(input) { uris ->
-      if (uris.isNotEmpty()) {
-        onActivityResult(uris, uris.map { it.copyToCacheFile(context) })
+  fun launch(input: String?, onActivityResult: Callback2<Uri?, File?>) {
+    launch(input) { uri ->
+      if (uri != null) {
+        onActivityResult(uri, uri.copyToCacheFile(context))
+      } else {
+        onActivityResult(null, null)
       }
     }
   }
@@ -61,11 +50,11 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   @JvmOverloads
   fun launch(
     input: String,
-    onActivityResult: Callback2<List<Uri>, List<File>>,
+    onActivityResult: Callback2<Uri?, File?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) {
-    permissionLauncher.launch(
+    requestPermissionLauncher.launch(
       Manifest.permission.READ_EXTERNAL_STORAGE,
       onGranted = { launch(input, onActivityResult) },
       onPermissionDenied,
@@ -75,29 +64,40 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
 
   @JvmOverloads
   fun launchForImage(
-    onActivityResult: ActivityResultCallback<List<Uri>>,
+    onActivityResult: ActivityResultCallback<Uri?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForImage(
-    onActivityResult: Callback2<List<Uri>, List<File>>,
+    onActivityResult: Callback2<Uri?, File?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
-    onActivityResult: ActivityResultCallback<List<Uri>>,
+    onActivityResult: ActivityResultCallback<Uri?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
-    onActivityResult: Callback2<List<Uri>, List<File>>,
+    onActivityResult: Callback2<Uri?, File?>,
     onPermissionDenied: Callback0,
     onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
+}
+
+class PickContentContract : ActivityResultContract<String, Uri>() {
+  override fun createIntent(context: Context, input: String?) =
+    Intent(Intent.ACTION_PICK).apply {
+      type = input
+    }
+
+  override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+    return if (intent == null || resultCode != Activity.RESULT_OK) null else intent.data!!
+  }
 }
