@@ -1,8 +1,9 @@
-package com.dylanc.activityresult.launcher.sample.base
+package com.dylanc.activityresult.launcher.sample
 
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import com.dylanc.callbacks.Callback0
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
@@ -10,15 +11,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
  */
 abstract class BaseActivity : AppCompatActivity() {
 
-  protected fun toast(it: String?) {
+  fun toast(it: String?) {
     Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
   }
 
-  protected fun toast(@StringRes message: Int) {
+  fun toast(@StringRes message: Int) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
   }
 
-  protected fun showDialog(@StringRes title: Int, @StringRes message: Int, onClick: () -> Unit) {
+  fun showDialog(@StringRes title: Int, @StringRes message: Int, onClick: Callback0) {
     MaterialAlertDialogBuilder(this)
       .setTitle(title)
       .setMessage(message)
@@ -30,7 +31,7 @@ abstract class BaseActivity : AppCompatActivity() {
       .show()
   }
 
-  protected fun showItems(@StringRes title: Int, names: List<String>) {
+  fun showItems(@StringRes title: Int, names: List<String>) {
     MaterialAlertDialogBuilder(this)
       .setTitle(title)
       .setItems(names.toTypedArray()) { _, _ ->
