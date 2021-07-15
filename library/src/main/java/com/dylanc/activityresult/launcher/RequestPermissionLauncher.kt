@@ -21,6 +21,7 @@ package com.dylanc.activityresult.launcher
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import com.dylanc.callbacks.Callback0
+import com.dylanc.callbacks.Callback1
 
 /**
  * @author Dylan Cai
@@ -28,19 +29,21 @@ import com.dylanc.callbacks.Callback0
 class RequestPermissionLauncher(private val caller: ActivityResultCaller) :
   BaseActivityResultLauncher<String, Boolean>(caller, RequestPermission()) {
 
+  private val settingsLauncher = AppDetailsSettingsLauncher(caller)
+
   @JvmOverloads
   fun launch(
     permission: String,
     onGranted: Callback0,
-    onDenied: Callback0,
+    onDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequest: Callback0? = null
   ) {
     launch(permission) {
       when {
         it -> onGranted()
         caller.shouldShowRequestPermissionRationale(permission) ->
-          onExplainRequest?.invoke() ?: onDenied()
-        else -> onDenied()
+          onExplainRequest?.invoke() ?: onDenied(settingsLauncher)
+        else -> onDenied(settingsLauncher)
       }
     }
   }

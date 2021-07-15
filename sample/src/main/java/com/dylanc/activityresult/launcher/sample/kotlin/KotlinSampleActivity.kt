@@ -19,6 +19,7 @@ class KotlinSampleActivity : BaseActivity() {
   private val binding: ActivityLauncherBinding by binding()
   private val requestPermissionLauncher = RequestPermissionLauncher(this)
   private val requestMultiplePermissionsLauncher = RequestMultiplePermissionsLauncher(this)
+  private val appDetailsSettingsLauncher = AppDetailsSettingsLauncher(this)
   private val takePictureLauncher = TakePictureLauncher(this)
   private val takePicturePreviewLauncher = TakePicturePreviewLauncher(this)
   private val pickContentLauncher = PickContentLauncher(this)
@@ -39,6 +40,7 @@ class KotlinSampleActivity : BaseActivity() {
     with(binding) {
       btnRequestPermission.setOnClickListener { requestPermission() }
       btnRequestMultiplePermissions.setOnClickListener { requestMultiplePermissions() }
+      btnAppDetailsSettings.setOnClickListener { goToAppDetailSettings() }
       btnTakePicturePreview.setOnClickListener { takePicturePreview() }
       btnTakePicture.setOnClickListener { takePicture() }
       btnCropPicture.setOnClickListener { takePictureAndCropIt() }
@@ -63,8 +65,10 @@ class KotlinSampleActivity : BaseActivity() {
       onGranted = {
         toast(R.string.location_permission_granted)
       },
-      onDenied = {
-        toast(R.string.no_location_permission)
+      onDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_location_permission) {
+          settingsLauncher.launch()
+        }
       },
       onExplainRequest = {
         showDialog(R.string.need_permission_title, R.string.need_location_permission) {
@@ -81,13 +85,15 @@ class KotlinSampleActivity : BaseActivity() {
       onAllGranted = {
         toast(R.string.location_and_read_permissions_granted)
       },
-      onDenied = { list ->
+      onDenied = { list, settingsLauncher ->
         val message = when {
           list.size == 2 -> R.string.need_location_and_read_permissions
           list.first() == Manifest.permission.ACCESS_FINE_LOCATION -> R.string.need_location_permission
           else -> R.string.need_read_permission
         }
-        toast(message)
+        showDialog(R.string.need_permission_title, message) {
+          settingsLauncher.launch()
+        }
       },
       onExplainRequest = { list ->
         val message = when {
@@ -100,6 +106,10 @@ class KotlinSampleActivity : BaseActivity() {
         }
       }
     )
+  }
+
+  private fun goToAppDetailSettings() {
+    appDetailsSettingsLauncher.launch()
   }
 
   private fun takePicturePreview() {
@@ -146,8 +156,10 @@ class KotlinSampleActivity : BaseActivity() {
           PictureDialogFragment(uri, file).show(supportFragmentManager)
         }
       },
-      onPermissionDenied = {
-        toast(R.string.no_read_permission)
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
       },
       onExplainRequestPermission = {
         showDialog(R.string.need_permission_title, R.string.need_read_permission) {
@@ -164,8 +176,10 @@ class KotlinSampleActivity : BaseActivity() {
           PictureDialogFragment(uri, file).show(supportFragmentManager)
         }
       },
-      onPermissionDenied = {
-        toast(R.string.no_read_permission)
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
       },
       onExplainRequestPermission = {
         showDialog(R.string.need_permission_title, R.string.need_read_permission) {
@@ -182,8 +196,10 @@ class KotlinSampleActivity : BaseActivity() {
           showItems(R.string.selected_files, files.map { it.name })
         }
       },
-      onPermissionDenied = {
-        toast(R.string.no_read_permission)
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
       },
       onExplainRequestPermission = {
         showDialog(R.string.need_permission_title, R.string.need_read_permission) {
@@ -200,8 +216,10 @@ class KotlinSampleActivity : BaseActivity() {
           showItems(R.string.selected_files, files.map { it.name })
         }
       },
-      onPermissionDenied = {
-        toast(R.string.no_read_permission)
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
       },
       onExplainRequestPermission = {
         showDialog(R.string.need_permission_title, R.string.need_read_permission) {
@@ -219,8 +237,10 @@ class KotlinSampleActivity : BaseActivity() {
           toast(R.string.bluetooth_enabled)
         }
       },
-      onPermissionDenied = {
-        toast(R.string.bluetooth_need_location_permission)
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.bluetooth_need_location_permission) {
+          settingsLauncher.launch()
+        }
       },
       onExplainRequestPermission = {
         showDialog(R.string.need_permission_title, R.string.need_location_permission) {

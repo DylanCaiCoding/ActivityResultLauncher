@@ -23,12 +23,15 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import com.dylanc.callbacks.Callback0
 import com.dylanc.callbacks.Callback1
+import com.dylanc.callbacks.Callback2
 
 /**
  * @author Dylan Cai
  */
 class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Array<String>, Map<String, Boolean>>(caller, RequestMultiplePermissions()) {
+
+  private val settingsLauncher = AppDetailsSettingsLauncher(caller)
 
   fun launch(vararg permissions: String, onActivityResult: ActivityResultCallback<Map<String, Boolean>>) =
     launch(arrayOf(*permissions), onActivityResult)
@@ -37,7 +40,7 @@ class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCalle
   fun launch(
     vararg permissions: String,
     onAllGranted: Callback0,
-    onDenied: Callback1<List<String>>,
+    onDenied: Callback2<List<String>, AppDetailsSettingsLauncher>,
     onExplainRequest: (Callback1<List<String>>)? = null
   ) {
     launch(*permissions) { result ->
@@ -45,9 +48,9 @@ class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCalle
         val deniedList = result.filter { !it.value }.map { it.key }
         val explainableList = deniedList.filter { caller.shouldShowRequestPermissionRationale(it) }
         if (explainableList.isNotEmpty()) {
-          onExplainRequest?.invoke(explainableList) ?: onDenied(explainableList)
+          onExplainRequest?.invoke(explainableList) ?: onDenied(explainableList, settingsLauncher)
         } else {
-          onDenied(deniedList)
+          onDenied(deniedList, settingsLauncher)
         }
       } else {
         onAllGranted()

@@ -54,7 +54,7 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
   @RequiresPermission(Manifest.permission.BLUETOOTH)
   fun launch(
     onBluetoothEnabled: ActivityResultCallback<Boolean>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) {
     launch {
@@ -76,7 +76,7 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
   fun launchAndEnableLocation(
     @StringRes enablePositionReason: Int,
     onLocationEnabled: ActivityResultCallback<Boolean>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null,
     onBluetoothDisabled: Callback0? = null
   ) =
@@ -90,7 +90,7 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
   fun launchAndEnableLocation(
     enablePositionReason: String,
     onLocationEnabled: ActivityResultCallback<Boolean>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null,
     onBluetoothDisabled: Callback0? = null
   ) =
@@ -106,7 +106,7 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
   @RequiresPermission(Manifest.permission.BLUETOOTH)
   fun launchAndEnableLocation(
     onLocationEnabled: Callback0,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null,
     onBluetoothDisabled: Callback0? = null,
     onLocationDisabled: Callback1<EnableLocationLauncher>

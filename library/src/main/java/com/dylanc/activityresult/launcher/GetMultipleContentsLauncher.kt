@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.GetMultipleContents
 import com.dylanc.callbacks.Callback0
+import com.dylanc.callbacks.Callback1
 import com.dylanc.callbacks.Callback2
 import java.io.File
 
@@ -39,7 +40,7 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   fun launch(
     input: String,
     onActivityResult: ActivityResultCallback<List<Uri>>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) {
     permissionLauncher.launch(
@@ -62,7 +63,7 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   fun launch(
     input: String,
     onActivityResult: Callback2<List<Uri>, List<File>>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) {
     permissionLauncher.launch(
@@ -76,28 +77,28 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
   @JvmOverloads
   fun launchForImage(
     onActivityResult: ActivityResultCallback<List<Uri>>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForImage(
     onActivityResult: Callback2<List<Uri>, List<File>>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
     onActivityResult: ActivityResultCallback<List<Uri>>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
     onActivityResult: Callback2<List<Uri>, List<File>>,
-    onPermissionDenied: Callback0,
+    onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 }

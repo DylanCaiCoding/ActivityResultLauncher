@@ -10,6 +10,7 @@ import android.provider.OpenableColumns;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
 
+import com.dylanc.activityresult.launcher.AppDetailsSettingsLauncher;
 import com.dylanc.activityresult.launcher.CreateDocumentLauncher;
 import com.dylanc.activityresult.launcher.CropPictureLauncher;
 import com.dylanc.activityresult.launcher.EnableBluetoothLauncher;
@@ -42,6 +43,7 @@ public class JavaSampleActivity extends BaseActivity {
 
   private final RequestPermissionLauncher requestPermissionLauncher = new RequestPermissionLauncher(this);
   private final RequestMultiplePermissionsLauncher requestMultiplePermissionsLauncher = new RequestMultiplePermissionsLauncher(this);
+  private final AppDetailsSettingsLauncher appDetailsSettingsLauncher = new AppDetailsSettingsLauncher(this);
   private final TakePicturePreviewLauncher takePicturePreviewLauncher = new TakePicturePreviewLauncher(this);
   private final TakePictureLauncher takePictureLauncher = new TakePictureLauncher(this);
   private final PickContentLauncher pickContentLauncher = new PickContentLauncher(this);
@@ -64,6 +66,7 @@ public class JavaSampleActivity extends BaseActivity {
     setContentView(binding.getRoot());
     binding.btnRequestPermission.setOnClickListener((v) -> requestPermission());
     binding.btnRequestMultiplePermissions.setOnClickListener((v) -> requestMultiplePermissions());
+    binding.btnAppDetailsSettings.setOnClickListener((v) -> goToAppDetailsSettings());
     binding.btnTakePicturePreview.setOnClickListener((v) -> takePicturePreview());
     binding.btnTakePicture.setOnClickListener((v) -> takePicture());
     binding.btnCropPicture.setOnClickListener((v) -> takePictureAndCropIt());
@@ -85,7 +88,7 @@ public class JavaSampleActivity extends BaseActivity {
   private void requestPermission() {
     requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION,
         () -> toast(R.string.location_permission_granted),
-        () -> toast(R.string.no_location_permission),
+        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_location_permission, settingsLauncher::launch),
         () -> showDialog(R.string.need_permission_title, R.string.need_location_permission, this::requestPermission)
     );
   }
@@ -97,7 +100,7 @@ public class JavaSampleActivity extends BaseActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE
         },
         () -> toast(R.string.location_and_read_permissions_granted),
-        (list) -> {
+        (list, settingsLauncher) -> {
           int message;
           if (list.size() == 2) {
             message = R.string.need_location_and_read_permissions;
@@ -106,7 +109,7 @@ public class JavaSampleActivity extends BaseActivity {
           } else {
             message = R.string.need_read_permission;
           }
-          toast(message);
+          showDialog(R.string.need_permission_title, message, settingsLauncher::launch);
         },
         (list) -> {
           int message;
@@ -120,6 +123,10 @@ public class JavaSampleActivity extends BaseActivity {
           showDialog(R.string.need_permission_title, message, this::requestMultiplePermissions);
         }
     );
+  }
+
+  private void goToAppDetailsSettings() {
+    appDetailsSettingsLauncher.launch();
   }
 
   private void takePicturePreview() {
@@ -167,7 +174,7 @@ public class JavaSampleActivity extends BaseActivity {
             new PictureDialogFragment(uri, file).show(getSupportFragmentManager());
           }
         },
-        () -> toast(R.string.no_read_permission),
+        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
         () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickPicture)
     );
   }
@@ -179,7 +186,7 @@ public class JavaSampleActivity extends BaseActivity {
             new PictureDialogFragment(uri, file).show(getSupportFragmentManager());
           }
         },
-        () -> toast(R.string.no_read_permission),
+        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
         () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickPicture)
     );
   }
@@ -195,7 +202,7 @@ public class JavaSampleActivity extends BaseActivity {
             showItems(R.string.selected_files, filenames);
           }
         },
-        () -> toast(R.string.no_read_permission),
+        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
         () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickPicture)
     );
   }
@@ -211,7 +218,7 @@ public class JavaSampleActivity extends BaseActivity {
             showItems(R.string.selected_files, filenames);
           }
         },
-        () -> toast(R.string.no_read_permission),
+        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
         () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickPicture)
     );
   }
@@ -224,7 +231,7 @@ public class JavaSampleActivity extends BaseActivity {
             toast(R.string.bluetooth_enabled);
           }
         },
-        () -> toast(R.string.bluetooth_need_location_permission),
+        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.bluetooth_need_location_permission, settingsLauncher::launch),
         () -> showDialog(R.string.need_permission_title, R.string.need_location_permission, this::enableBluetooth)
     );
   }
