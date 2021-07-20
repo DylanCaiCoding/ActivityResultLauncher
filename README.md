@@ -67,6 +67,11 @@ dependencies {
 
 [Releases](https://github.com/DylanCaiCoding/ActivityResultLauncher/releases)
 
+## Author's other libraries
+
+- [LoadingHelper](https://github.com/DylanCaiCoding/LoadingHelper), a highly expandable Android library for decoupling the code of toolbar or loading status view.
+- [ViewBindingKTX](https://github.com/DylanCaiCoding/ViewBindingKTX), the most comprehensive utils of ViewBinding.
+
 ## License
 
 ```
