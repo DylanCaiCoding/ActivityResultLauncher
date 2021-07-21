@@ -63,6 +63,10 @@ dependencies {
 
 - [Custom launcher](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/自定义启动器-(Java))
 
+#### Others
+
+- [Q&A](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/Q&A)
+
 ## Change log
 
 [Releases](https://github.com/DylanCaiCoding/ActivityResultLauncher/releases)
