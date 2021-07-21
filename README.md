@@ -8,6 +8,7 @@ English | [中文](https://github.com/DylanCaiCoding/ActivityResultLauncher/blob
 
 ## Feature
 
+- Replace `startActivityForResult()` perfectly
 - Support for the usage of Kotlin and Java
 - Support for requesting permission
 - Support for taking picture
