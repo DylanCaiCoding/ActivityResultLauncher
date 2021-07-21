@@ -8,6 +8,7 @@
 
 ## Feature
 
+- 完美地替代 `startActivityForResult()`
 - 支持 Kotlin 和 Java 用法
 - 支持请求权限
 - 支持拍照
