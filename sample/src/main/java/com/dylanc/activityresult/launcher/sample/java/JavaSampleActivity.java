@@ -1,6 +1,23 @@
+/*
+ * Copyright (c) 2021. Dylan Cai
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.dylanc.activityresult.launcher.sample.java;
 
 import android.Manifest;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,12 +40,14 @@ import com.dylanc.activityresult.launcher.PickContactLauncher;
 import com.dylanc.activityresult.launcher.PickContentLauncher;
 import com.dylanc.activityresult.launcher.RequestMultiplePermissionsLauncher;
 import com.dylanc.activityresult.launcher.RequestPermissionLauncher;
+import com.dylanc.activityresult.launcher.StartActivityLauncher;
 import com.dylanc.activityresult.launcher.TakePictureLauncher;
 import com.dylanc.activityresult.launcher.TakePicturePreviewLauncher;
 import com.dylanc.activityresult.launcher.TakeVideoLauncher;
 import com.dylanc.activityresult.launcher.sample.BaseActivity;
 import com.dylanc.activityresult.launcher.sample.R;
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityLauncherBinding;
+import com.dylanc.activityresult.launcher.sample.java.launcher.InputTextActivity;
 import com.dylanc.activityresult.launcher.sample.java.launcher.InputTextLauncher;
 import com.dylanc.activityresult.launcher.sample.widget.PictureDialogFragment;
 
@@ -36,11 +55,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dylanc.activityresult.launcher.sample.java.launcher.InputTextResultContract.KEY_NAME;
+import static com.dylanc.activityresult.launcher.sample.java.launcher.InputTextResultContract.KEY_TITLE;
+import static com.dylanc.activityresult.launcher.sample.java.launcher.InputTextResultContract.KEY_VALUE;
+
 /**
  * @author Dylan Cai
  */
 public class JavaSampleActivity extends BaseActivity {
 
+  private final StartActivityLauncher startActivityLauncher = new StartActivityLauncher(this);
   private final RequestPermissionLauncher requestPermissionLauncher = new RequestPermissionLauncher(this);
   private final RequestMultiplePermissionsLauncher requestMultiplePermissionsLauncher = new RequestMultiplePermissionsLauncher(this);
   private final AppDetailsSettingsLauncher appDetailsSettingsLauncher = new AppDetailsSettingsLauncher(this);
@@ -64,6 +88,7 @@ public class JavaSampleActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     ActivityLauncherBinding binding = ActivityLauncherBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
+    binding.btnStartActivity.setOnClickListener((v) -> startInputTextActivity());
     binding.btnRequestPermission.setOnClickListener((v) -> requestPermission());
     binding.btnRequestMultiplePermissions.setOnClickListener((v) -> requestMultiplePermissions());
     binding.btnAppDetailsSettings.setOnClickListener((v) -> goToAppDetailsSettings());
@@ -83,6 +108,18 @@ public class JavaSampleActivity extends BaseActivity {
     binding.btnOpenDocumentTree.setOnClickListener((v) -> openDocumentTree());
     binding.btnPickContact.setOnClickListener((v) -> pickContact());
     binding.btnInputText.setOnClickListener((v) -> inputText());
+  }
+
+  private void startInputTextActivity() {
+    Intent intent = new Intent(this, InputTextActivity.class);
+    intent.putExtra(KEY_NAME, "nickname");
+    intent.putExtra(KEY_TITLE, "Nickname");
+    startActivityLauncher.launch(intent, (resultCode, data) -> {
+      if (resultCode == RESULT_OK) {
+        String value = data.getStringExtra(KEY_VALUE);
+        toast(value);
+      }
+    });
   }
 
   private void requestPermission() {

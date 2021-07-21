@@ -9,7 +9,11 @@ import com.dylanc.activityresult.launcher.*
 import com.dylanc.activityresult.launcher.sample.BaseActivity
 import com.dylanc.activityresult.launcher.sample.R
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityLauncherBinding
+import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextActivity
 import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextLauncher
+import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextResultContract.Companion.KEY_NAME
+import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextResultContract.Companion.KEY_TITLE
+import com.dylanc.activityresult.launcher.sample.kotlin.launcher.InputTextResultContract.Companion.KEY_VALUE
 import com.dylanc.activityresult.launcher.sample.widget.PictureDialogFragment
 import com.dylanc.viewbinding.binding
 
@@ -17,6 +21,7 @@ import com.dylanc.viewbinding.binding
 class KotlinSampleActivity : BaseActivity() {
 
   private val binding: ActivityLauncherBinding by binding()
+  private val startActivityLauncher = StartActivityLauncher(this)
   private val requestPermissionLauncher = RequestPermissionLauncher(this)
   private val requestMultiplePermissionsLauncher = RequestMultiplePermissionsLauncher(this)
   private val appDetailsSettingsLauncher = AppDetailsSettingsLauncher(this)
@@ -38,6 +43,7 @@ class KotlinSampleActivity : BaseActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     with(binding) {
+      btnStartActivity.setOnClickListener { startInputTextActivity() }
       btnRequestPermission.setOnClickListener { requestPermission() }
       btnRequestMultiplePermissions.setOnClickListener { requestMultiplePermissions() }
       btnAppDetailsSettings.setOnClickListener { goToAppDetailSettings() }
@@ -57,6 +63,17 @@ class KotlinSampleActivity : BaseActivity() {
       btnEnableBluetooth.setOnClickListener { enableBluetooth() }
       btnEnableLocation.setOnClickListener { enableLocation() }
       btnInputText.setOnClickListener { inputText() }
+    }
+  }
+
+  private fun startInputTextActivity() {
+    startActivityLauncher.launch<InputTextActivity>(
+      KEY_NAME to "nickname",
+      KEY_TITLE to "Nickname",
+    ) { resultCode, data ->
+      if (resultCode == RESULT_OK) {
+        data?.getStringExtra(KEY_VALUE)?.let { toast(it) }
+      }
     }
   }
 
@@ -263,12 +280,14 @@ class KotlinSampleActivity : BaseActivity() {
   private fun createDocument() {
     createDocumentLauncher.launch { uri ->
       if (uri != null) {
-        contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
-          if (cursor.moveToFirst()) {
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
-            toast("create $name")
+        contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+          ?.use { cursor ->
+            if (cursor.moveToFirst()) {
+              val name =
+                cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+              toast("create $name")
+            }
           }
-        }
       }
     }
   }
@@ -276,12 +295,14 @@ class KotlinSampleActivity : BaseActivity() {
   private fun openDocument() {
     openDocumentLauncher.launch("application/*") { uri ->
       if (uri != null) {
-        contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
-          if (cursor.moveToFirst()) {
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
-            toast(name)
+        contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+          ?.use { cursor ->
+            if (cursor.moveToFirst()) {
+              val name =
+                cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+              toast(name)
+            }
           }
-        }
       }
     }
   }
@@ -290,10 +311,11 @@ class KotlinSampleActivity : BaseActivity() {
     openMultipleDocumentsLauncher.launch("application/*") { uris ->
       if (uris.isNotEmpty()) {
         val names = uris.map {
-          contentResolver.query(it, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
-            cursor.moveToFirst()
-            cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
-          }.orEmpty()
+          contentResolver.query(it, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+            ?.use { cursor ->
+              cursor.moveToFirst()
+              cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+            }.orEmpty()
         }
         showItems(R.string.documents, names)
       }
@@ -314,12 +336,13 @@ class KotlinSampleActivity : BaseActivity() {
   private fun pickContact() {
     pickContactLauncher.launch { uri ->
       if (uri != null) {
-        contentResolver.query(uri, arrayOf(ContactsContract.Data.DISPLAY_NAME), null, null, null)?.use { cursor ->
-          if (cursor.moveToFirst()) {
-            val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME))
-            toast(name)
+        contentResolver.query(uri, arrayOf(ContactsContract.Data.DISPLAY_NAME), null, null, null)
+          ?.use { cursor ->
+            if (cursor.moveToFirst()) {
+              val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME))
+              toast(name)
+            }
           }
-        }
       }
     }
   }
