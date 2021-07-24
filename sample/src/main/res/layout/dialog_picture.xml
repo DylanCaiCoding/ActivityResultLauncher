@@ -29,34 +29,18 @@
         android:layout_width="240dp"
         android:layout_height="240dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        app:layout_goneMarginBottom="36dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_path"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_goneMarginBottom="36dp"
         tools:srcCompat="@tools:sample/avatars" />
-
-      <TextView
-        android:id="@+id/tv_path"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
-        android:textColor="#666"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_picture"
-        tools:visibility="gone" />
 
       <ImageView
         android:id="@+id/iv_video"
@@ -64,6 +48,7 @@
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/iv_picture"
         app:layout_constraintEnd_toEndOf="@+id/iv_picture"
         app:srcCompat="@drawable/ic_baseline_videocam_24" />

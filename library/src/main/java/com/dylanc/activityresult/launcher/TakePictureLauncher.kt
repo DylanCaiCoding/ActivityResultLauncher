@@ -18,10 +18,14 @@
 
 package com.dylanc.activityresult.launcher
 
+import android.content.ContentValues
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.TakePicture
-import com.dylanc.callbacks.Callback2
+import androidx.core.content.FileProvider
 import java.io.File
 
 /**
@@ -30,14 +34,28 @@ import java.io.File
 class TakePictureLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Uri, Boolean>(caller, TakePicture()) {
 
-  fun launch(onActivityResult: Callback2<Uri?, File?>) {
+  fun launch(callback: ActivityResultCallback<Uri?>) {
     val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.jpg")
-    val uri = file.toUri(context)
+    val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+    } else {
+      Uri.fromFile(file)
+    }
+    launch(uri, callback)
+  }
+
+  @JvmOverloads
+  fun launchForMediaImage(contentValues: ContentValues = ContentValues(), callback: ActivityResultCallback<Uri?>) {
+    val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)!!
+    launch(uri, callback)
+  }
+
+  private fun launch(uri: Uri, callback: ActivityResultCallback<Uri?>) {
     launch(uri) {
       if (it) {
-        onActivityResult(uri, file)
+        callback.onActivityResult(uri)
       } else {
-        onActivityResult(null, null)
+        callback.onActivityResult(null)
       }
     }
   }

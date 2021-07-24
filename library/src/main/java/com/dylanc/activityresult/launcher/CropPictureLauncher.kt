@@ -31,8 +31,6 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
 import com.dylanc.callbacks.Callback1
-import com.dylanc.callbacks.Callback2
-import java.io.File
 
 /**
  * @author Dylan Cai
@@ -64,27 +62,6 @@ class CropPictureLauncher(caller: ActivityResultCaller) :
       outputY, outputContentValues, onCreateIntent
     )
     launch(request, onActivityResult)
-  }
-
-  @JvmOverloads
-  fun launch(
-    inputUri: Uri,
-    aspectX: Int = 1, aspectY: Int = 1,
-    outputX: Int = 512, outputY: Int = 512,
-    outputContentValues: ContentValues = ContentValues(),
-    onCreateIntent: Callback1<Intent>? = null,
-    onActivityResult: Callback2<Uri?, File?>
-  ) {
-    launch(
-      inputUri, aspectX, aspectY, outputX,
-      outputY, outputContentValues, onCreateIntent
-    ) { uri ->
-      if (uri != null) {
-        onActivityResult(uri, uri.copyToCacheFile(context))
-      } else {
-        onActivityResult(null, null)
-      }
-    }
   }
 }
 

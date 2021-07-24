@@ -28,7 +28,7 @@ import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.dylanc.activityresult.launcher.sample.R
 import com.dylanc.activityresult.launcher.sample.databinding.DialogPictureBinding
-import java.io.File
+import com.dylanc.callbacks.Callback0
 import java.util.*
 
 /**
@@ -36,11 +36,11 @@ import java.util.*
  */
 class PictureDialogFragment(private val onLoadPicture: PictureDialog.(DialogPictureBinding) -> Unit) : DialogFragment() {
 
-  constructor(uri: Uri, file: File) : this({
-    it.tvPath.text = "path: ${file.path}"
+  @JvmOverloads
+  constructor(uri: Uri, isVideo: Boolean = false, listener: Callback0? = null) : this({
     Glide.with(context).load(uri).centerCrop().into(it.ivPicture)
-    setOnDismissListener { file.delete() }
-    it.ivVideo.isVisible = file.path.lowercase(Locale.getDefault()).endsWith("mp4")
+    listener?.let { setOnDismissListener { listener.invoke() } }
+    it.ivVideo.isVisible = isVideo
   })
 
   constructor(bitmap: Bitmap) : this({
@@ -66,7 +66,7 @@ class PictureDialogFragment(private val onLoadPicture: PictureDialog.(DialogPict
       with(binding) {
         window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         root.setOnClickListener { this@PictureDialogFragment.dismiss() }
-        onLoadPicture(this@PictureDialog,this)
+        onLoadPicture(this@PictureDialog, this)
       }
     }
   }

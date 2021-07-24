@@ -16,6 +16,8 @@
 
 package com.dylanc.activityresult.launcher.sample
 
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -54,4 +56,12 @@ abstract class BaseActivity : AppCompatActivity() {
       }
       .show()
   }
+
+  val Uri.displayName: String?
+    get() = contentResolver.query(this, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+      if (cursor.moveToFirst())
+        cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+      else
+        null
+    }
 }

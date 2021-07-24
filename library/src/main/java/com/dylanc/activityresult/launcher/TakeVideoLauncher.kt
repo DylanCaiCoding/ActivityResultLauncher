@@ -18,13 +18,16 @@
 
 package com.dylanc.activityresult.launcher
 
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
+import android.provider.OpenableColumns
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.TakeVideo
 import androidx.core.content.FileProvider
-import com.dylanc.callbacks.Callback2
 import java.io.File
 
 /**
@@ -33,15 +36,40 @@ import java.io.File
 class TakeVideoLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Uri, Bitmap>(caller, TakeVideo()) {
 
-  fun launch(onActivityResult: Callback2<Uri?, File?>) {
+  fun launch(callback: ActivityResultCallback<Uri?>) {
     val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.mp4")
-    val uri = file.toUri(context)
+    val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+    } else {
+      Uri.fromFile(file)
+    }
+    launch(uri, callback)
+  }
+
+  @JvmOverloads
+  fun launchForMediaImage(contentValues: ContentValues = ContentValues(), callback: ActivityResultCallback<Uri?>) {
+    val uri = context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)!!
+    launch(uri, callback)
+  }
+
+  private fun launch(uri: Uri, callback: ActivityResultCallback<Uri?>) {
     launch(uri) {
-      if (file.length() > 0) {
-        onActivityResult(uri, file)
+      val size = uri.size
+      if (size > 0) {
+        callback.onActivityResult(uri)
       } else {
-        onActivityResult(null, null)
+        callback.onActivityResult(null)
       }
     }
   }
+
+  private val Uri.size: Long
+    get() =
+      context.contentResolver.query(this, arrayOf(OpenableColumns.SIZE), null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+          cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
+        }else {
+          0
+        }
+      } ?: 0
 }

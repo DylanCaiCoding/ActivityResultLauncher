@@ -18,30 +18,6 @@
       android:text="start activity for result" />
 
     <Button
-      android:id="@+id/btn_request_permission"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="request permission" />
-
-    <Button
-      android:id="@+id/btn_request_multiple_permissions"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="request multiple permissions" />
-
-    <Button
-      android:id="@+id/btn_app_details_settings"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="app details settings" />
-
-    <Button
       android:id="@+id/btn_take_picture_preview"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -104,6 +80,30 @@
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
       android:text="get multiple video" />
+    <Button
+      android:id="@+id/btn_request_permission"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="request permission" />
+
+    <Button
+      android:id="@+id/btn_request_multiple_permissions"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="request multiple permissions" />
+
+    <Button
+      android:id="@+id/btn_app_details_settings"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:text="app details settings" />
+
 
     <Button
       android:id="@+id/btn_enable_bluetooth"
@@ -167,7 +167,7 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
-      android:text="custom input text" />
+      android:text="custom input text launcher" />
 
   </LinearLayout>
 </androidx.core.widget.NestedScrollView>

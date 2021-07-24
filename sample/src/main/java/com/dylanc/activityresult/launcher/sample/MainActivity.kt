@@ -17,10 +17,10 @@
 package com.dylanc.activityresult.launcher.sample
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.Menu
-import android.widget.Toast
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityMainBinding
 import com.dylanc.activityresult.launcher.sample.java.JavaSampleActivity
@@ -39,5 +39,19 @@ class MainActivity : AppCompatActivity() {
     binding.btnJava.setOnClickListener {
       startActivity(Intent(this, JavaSampleActivity::class.java))
     }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    menuInflater.inflate(R.menu.github, menu)
+    return true
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    if (item.itemId == R.id.github) {
+      val uri = Uri.parse("https://github.com/DylanCaiCoding/ActivityResultLauncher")
+      val intent = Intent("android.intent.action.VIEW", uri)
+      startActivity(intent)
+    }
+    return true
   }
 }

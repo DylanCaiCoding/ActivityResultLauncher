@@ -51,7 +51,6 @@ import com.dylanc.activityresult.launcher.sample.java.launcher.InputTextActivity
 import com.dylanc.activityresult.launcher.sample.java.launcher.InputTextLauncher;
 import com.dylanc.activityresult.launcher.sample.widget.PictureDialogFragment;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,21 +174,21 @@ public class JavaSampleActivity extends BaseActivity {
   }
 
   private void takePicture() {
-    takePictureLauncher.launch((uri, file) -> {
-      if (uri != null && file != null) {
-        new PictureDialogFragment(uri, file).show(getSupportFragmentManager());
+    takePictureLauncher.launch((uri) -> {
+      if (uri != null) {
+        new PictureDialogFragment(uri, false, () -> getContentResolver().delete(uri, null, null))
+            .show(getSupportFragmentManager());
       }
     });
   }
 
   private void takePictureAndCropIt() {
-    takePictureLauncher.launch((uri, file) -> {
-      if (uri != null && file != null) {
-        cropPictureLauncher.launch(uri, (croppedUri, croppedFile) -> {
-          //noinspection ResultOfMethodCallIgnored
-          file.delete();
-          if (croppedUri != null && croppedFile != null) {
-            new PictureDialogFragment(croppedUri, croppedFile).show(getSupportFragmentManager());
+    takePictureLauncher.launch((uri) -> {
+      if (uri != null) {
+        cropPictureLauncher.launch(uri, (croppedUri) -> {
+          getContentResolver().delete(uri, null, null);
+          if (croppedUri != null) {
+            new PictureDialogFragment(croppedUri).show(getSupportFragmentManager());
           }
         });
       }
@@ -197,18 +196,19 @@ public class JavaSampleActivity extends BaseActivity {
   }
 
   private void takeVideo() {
-    takeVideoLauncher.launch((uri, file) -> {
-      if (uri != null && file != null) {
-        new PictureDialogFragment(uri, file).show(getSupportFragmentManager());
+    takeVideoLauncher.launch((uri) -> {
+      if (uri != null) {
+        new PictureDialogFragment(uri, true, () -> getContentResolver().delete(uri, null, null))
+            .show(getSupportFragmentManager());
       }
     });
   }
 
   private void pickPicture() {
     pickContentLauncher.launchForImage(
-        (uri, file) -> {
-          if (uri != null && file != null) {
-            new PictureDialogFragment(uri, file).show(getSupportFragmentManager());
+        (uri) -> {
+          if (uri != null) {
+            new PictureDialogFragment(uri).show(getSupportFragmentManager());
           }
         },
         (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
@@ -218,9 +218,9 @@ public class JavaSampleActivity extends BaseActivity {
 
   private void pickVideo() {
     pickContentLauncher.launchForVideo(
-        (uri, file) -> {
-          if (uri != null && file != null) {
-            new PictureDialogFragment(uri, file).show(getSupportFragmentManager());
+        (uri) -> {
+          if (uri != null) {
+            new PictureDialogFragment(uri, true).show(getSupportFragmentManager());
           }
         },
         (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
@@ -230,11 +230,11 @@ public class JavaSampleActivity extends BaseActivity {
 
   private void getMultiplePicture() {
     getMultipleContentsLauncher.launchForImage(
-        (uris, files) -> {
-          if (files.size() > 0) {
+        (uris) -> {
+          if (uris.size() > 0) {
             List<String> filenames = new ArrayList<>();
-            for (File file : files) {
-              filenames.add(file.getName());
+            for (Uri uri : uris) {
+              filenames.add(getDisplayName(uri));
             }
             showItems(R.string.selected_files, filenames);
           }
@@ -246,11 +246,11 @@ public class JavaSampleActivity extends BaseActivity {
 
   private void getMultipleVideo() {
     getMultipleContentsLauncher.launchForVideo(
-        (uris, files) -> {
-          if (files != null) {
+        (uris) -> {
+          if (uris.size() > 0) {
             List<String> filenames = new ArrayList<>();
-            for (File file : files) {
-              filenames.add(file.getName());
+            for (Uri uri : uris) {
+              filenames.add(getDisplayName(uri));
             }
             showItems(R.string.selected_files, filenames);
           }

@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2021. Dylan Cai
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.dylanc.activityresult.launcher.sample.kotlin
 
 import android.Manifest
@@ -22,15 +38,15 @@ class KotlinSampleActivity : BaseActivity() {
 
   private val binding: ActivityLauncherBinding by binding()
   private val startActivityLauncher = StartActivityLauncher(this)
-  private val requestPermissionLauncher = RequestPermissionLauncher(this)
-  private val requestMultiplePermissionsLauncher = RequestMultiplePermissionsLauncher(this)
-  private val appDetailsSettingsLauncher = AppDetailsSettingsLauncher(this)
   private val takePictureLauncher = TakePictureLauncher(this)
   private val takePicturePreviewLauncher = TakePicturePreviewLauncher(this)
+  private val takeVideoLauncher = TakeVideoLauncher(this)
   private val pickContentLauncher = PickContentLauncher(this)
   private val getMultipleContentsLauncher = GetMultipleContentsLauncher(this)
   private val cropPictureLauncher = CropPictureLauncher(this)
-  private val takeVideoLauncher = TakeVideoLauncher(this)
+  private val requestPermissionLauncher = RequestPermissionLauncher(this)
+  private val requestMultiplePermissionsLauncher = RequestMultiplePermissionsLauncher(this)
+  private val appDetailsSettingsLauncher = AppDetailsSettingsLauncher(this)
   private val createDocumentLauncher = CreateDocumentLauncher(this)
   private val openDocumentLauncher = OpenDocumentLauncher(this)
   private val openMultipleDocumentsLauncher = OpenMultipleDocumentsLauncher(this)
@@ -44,9 +60,6 @@ class KotlinSampleActivity : BaseActivity() {
     super.onCreate(savedInstanceState)
     with(binding) {
       btnStartActivity.setOnClickListener { startInputTextActivity() }
-      btnRequestPermission.setOnClickListener { requestPermission() }
-      btnRequestMultiplePermissions.setOnClickListener { requestMultiplePermissions() }
-      btnAppDetailsSettings.setOnClickListener { goToAppDetailSettings() }
       btnTakePicturePreview.setOnClickListener { takePicturePreview() }
       btnTakePicture.setOnClickListener { takePicture() }
       btnCropPicture.setOnClickListener { takePictureAndCropIt() }
@@ -55,6 +68,9 @@ class KotlinSampleActivity : BaseActivity() {
       btnPickVideo.setOnClickListener { pickVideo() }
       btnGetMultiplePicture.setOnClickListener { getMultiplePicture() }
       btnGetMultipleVideo.setOnClickListener { getMultipleVideo() }
+      btnRequestPermission.setOnClickListener { requestPermission() }
+      btnRequestMultiplePermissions.setOnClickListener { requestMultiplePermissions() }
+      btnAppDetailsSettings.setOnClickListener { goToAppDetailSettings() }
       btnCreateDocument.setOnClickListener { createDocument() }
       btnOpenDocument.setOnClickListener { openDocument() }
       btnOpenMultipleDocument.setOnClickListener { openMultipleDocuments() }
@@ -75,6 +91,127 @@ class KotlinSampleActivity : BaseActivity() {
         data?.getStringExtra(KEY_VALUE)?.let { toast(it) }
       }
     }
+  }
+
+  private fun takePicturePreview() {
+    takePicturePreviewLauncher.launch { bitmap ->
+      if (bitmap != null) {
+        PictureDialogFragment(bitmap).show(supportFragmentManager)
+      }
+    }
+  }
+
+  private fun takePicture() {
+    takePictureLauncher.launch { uri ->
+      if (uri != null) {
+        PictureDialogFragment(uri) {
+          contentResolver.delete(uri, null, null)
+        }.show(supportFragmentManager)
+      }
+    }
+  }
+
+  private fun takePictureAndCropIt() {
+    takePictureLauncher.launch { uri ->
+      if (uri != null) {
+        cropPictureLauncher.launch(uri) { croppedUri ->
+          contentResolver.delete(uri, null, null)
+          if (croppedUri != null) {
+            PictureDialogFragment(croppedUri).show(supportFragmentManager)
+          }
+        }
+      }
+    }
+  }
+
+  private fun takeVideo() {
+    takeVideoLauncher.launch { uri ->
+      if (uri != null) {
+        PictureDialogFragment(uri, true) {
+          contentResolver.delete(uri, null, null)
+        }.show(supportFragmentManager)
+      }
+    }
+  }
+
+  private fun pickPicture() {
+    pickContentLauncher.launchForImage(
+      onActivityResult = { uri ->
+        if (uri != null) {
+          PictureDialogFragment(uri).show(supportFragmentManager)
+        }
+      },
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
+      },
+      onExplainRequestPermission = {
+        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
+          pickPicture()
+        }
+      }
+    )
+  }
+
+  private fun pickVideo() {
+    pickContentLauncher.launchForVideo(
+      onActivityResult = { uri ->
+        if (uri != null) {
+          PictureDialogFragment(uri, true).show(supportFragmentManager)
+        }
+      },
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
+      },
+      onExplainRequestPermission = {
+        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
+          pickPicture()
+        }
+      }
+    )
+  }
+
+  private fun getMultiplePicture() {
+    getMultipleContentsLauncher.launchForImage(
+      onActivityResult = { uris ->
+        if (uris.isNotEmpty()) {
+          showItems(R.string.selected_files, uris.map { it.displayName!! })
+        }
+      },
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
+      },
+      onExplainRequestPermission = {
+        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
+          getMultiplePicture()
+        }
+      }
+    )
+  }
+
+  private fun getMultipleVideo() {
+    getMultipleContentsLauncher.launchForVideo(
+      onActivityResult = { uris ->
+        if (uris.isNotEmpty()) {
+          showItems(R.string.selected_files, uris.map { it.displayName!! })
+        }
+      },
+      onPermissionDenied = { settingsLauncher ->
+        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
+          settingsLauncher.launch()
+        }
+      },
+      onExplainRequestPermission = {
+        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
+          getMultipleVideo()
+        }
+      }
+    )
   }
 
   private fun requestPermission() {
@@ -129,122 +266,6 @@ class KotlinSampleActivity : BaseActivity() {
     appDetailsSettingsLauncher.launch()
   }
 
-  private fun takePicturePreview() {
-    takePicturePreviewLauncher.launch { bitmap ->
-      if (bitmap != null) {
-        PictureDialogFragment(bitmap).show(supportFragmentManager)
-      }
-    }
-  }
-
-  private fun takePicture() {
-    takePictureLauncher.launch { uri, file ->
-      if (uri != null && file != null) {
-        PictureDialogFragment(uri, file).show(supportFragmentManager)
-      }
-    }
-  }
-
-  private fun takePictureAndCropIt() {
-    takePictureLauncher.launch { uri, file ->
-      if (uri != null && file != null) {
-        cropPictureLauncher.launch(uri) { croppedUri, croppedFile ->
-          file.delete()
-          if (croppedUri != null && croppedFile != null) {
-            PictureDialogFragment(croppedUri, croppedFile).show(supportFragmentManager)
-          }
-        }
-      }
-    }
-  }
-
-  private fun takeVideo() {
-    takeVideoLauncher.launch { uri, file ->
-      if (uri != null && file != null) {
-        PictureDialogFragment(uri, file).show(supportFragmentManager)
-      }
-    }
-  }
-
-  private fun pickPicture() {
-    pickContentLauncher.launchForImage(
-      onActivityResult = { uri, file ->
-        if (uri != null && file != null) {
-          PictureDialogFragment(uri, file).show(supportFragmentManager)
-        }
-      },
-      onPermissionDenied = { settingsLauncher ->
-        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
-          settingsLauncher.launch()
-        }
-      },
-      onExplainRequestPermission = {
-        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
-          pickPicture()
-        }
-      }
-    )
-  }
-
-  private fun pickVideo() {
-    pickContentLauncher.launchForVideo(
-      onActivityResult = { uri, file ->
-        if (uri != null && file != null) {
-          PictureDialogFragment(uri, file).show(supportFragmentManager)
-        }
-      },
-      onPermissionDenied = { settingsLauncher ->
-        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
-          settingsLauncher.launch()
-        }
-      },
-      onExplainRequestPermission = {
-        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
-          pickPicture()
-        }
-      }
-    )
-  }
-
-  private fun getMultiplePicture() {
-    getMultipleContentsLauncher.launchForImage(
-      onActivityResult = { _, files ->
-        if (files.isNotEmpty()) {
-          showItems(R.string.selected_files, files.map { it.name })
-        }
-      },
-      onPermissionDenied = { settingsLauncher ->
-        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
-          settingsLauncher.launch()
-        }
-      },
-      onExplainRequestPermission = {
-        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
-          getMultiplePicture()
-        }
-      }
-    )
-  }
-
-  private fun getMultipleVideo() {
-    getMultipleContentsLauncher.launchForVideo(
-      onActivityResult = { _, files ->
-        if (files.isNotEmpty()) {
-          showItems(R.string.selected_files, files.map { it.name })
-        }
-      },
-      onPermissionDenied = { settingsLauncher ->
-        showDialog(R.string.need_permission_title, R.string.no_read_permission) {
-          settingsLauncher.launch()
-        }
-      },
-      onExplainRequestPermission = {
-        showDialog(R.string.need_permission_title, R.string.need_read_permission) {
-          getMultipleVideo()
-        }
-      }
-    )
-  }
 
   private fun enableBluetooth() {
     enableBluetoothLauncher.launchAndEnableLocation(
