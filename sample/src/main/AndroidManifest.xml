@@ -16,8 +16,9 @@
     android:theme="@style/Theme.ActivityResultLauncher">
     <activity android:name=".java.launcher.InputTextActivity" />
     <activity android:name=".kotlin.launcher.InputTextActivity" />
-    <activity android:name=".kotlin.KotlinSampleActivity" />
-    <activity android:name=".java.JavaSampleActivity" />
+    <activity android:name=".kotlin.KotlinUsageActivity" />
+    <activity android:name=".kotlin.CoroutineUsageActivity" />
+    <activity android:name=".java.JavaUsageActivity" />
     <activity android:name=".MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

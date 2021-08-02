@@ -63,6 +63,18 @@ class CropPictureLauncher(caller: ActivityResultCaller) :
     )
     launch(request, onActivityResult)
   }
+
+  suspend fun launchForResult(
+    inputUri: Uri,
+    aspectX: Int = 1, aspectY: Int = 1,
+    outputX: Int = 512, outputY: Int = 512,
+    outputContentValues: ContentValues = ContentValues(),
+    onCreateIntent: Callback1<Intent>? = null
+  ) =
+    CropPictureRequest(
+      inputUri, aspectX, aspectY, outputX,
+      outputY, outputContentValues, onCreateIntent
+    ).let { launchForResult(it) }
 }
 
 class CropPictureContract : ActivityResultContract<CropPictureRequest, Uri>() {
@@ -70,25 +82,24 @@ class CropPictureContract : ActivityResultContract<CropPictureRequest, Uri>() {
 
   @CallSuper
   override fun createIntent(context: Context, input: CropPictureRequest) =
-    Intent("com.android.camera.action.CROP")
-      .apply {
-        outputUri = context.contentResolver.insert(
-          MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-          input.outputContentValues
-        )!!
-        setDataAndType(input.inputUri, "image/*")
-        putExtra(MediaStore.EXTRA_OUTPUT, outputUri)
-        putExtra("aspectX", input.aspectX)
-        putExtra("aspectY", input.aspectY)
-        putExtra("outputX", input.outputX)
-        putExtra("outputY", input.outputY)
-        putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-        putExtra("return-data", false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-          addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-        input.onCreateIntent?.invoke(this)
+    Intent("com.android.camera.action.CROP").apply {
+      outputUri = context.contentResolver.insert(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        input.outputContentValues
+      )!!
+      setDataAndType(input.inputUri, "image/*")
+      putExtra(MediaStore.EXTRA_OUTPUT, outputUri)
+      putExtra("aspectX", input.aspectX)
+      putExtra("aspectY", input.aspectY)
+      putExtra("outputX", input.outputX)
+      putExtra("outputY", input.outputY)
+      putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+      putExtra("return-data", false)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
       }
+      input.onCreateIntent?.invoke(this)
+    }
 
   override fun parseResult(resultCode: Int, intent: Intent?): Uri? =
     if (resultCode == Activity.RESULT_OK) outputUri else null

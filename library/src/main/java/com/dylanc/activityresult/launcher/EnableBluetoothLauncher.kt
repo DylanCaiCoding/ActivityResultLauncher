@@ -42,9 +42,18 @@ class EnableBluetoothLauncher(caller: ActivityResultCaller) :
   private val enableLocationLauncher = EnableLocationLauncher(caller)
 
   @RequiresPermission(Manifest.permission.BLUETOOTH)
-  fun launch(callback: ActivityResultCallback<Boolean>) {
+  fun launch(callback: ActivityResultCallback<Boolean>) = launch(null, callback)
+
+  @RequiresPermission(Manifest.permission.BLUETOOTH)
+  suspend fun launchForResult() = launchForResult(null)
+
+  @RequiresPermission(Manifest.permission.BLUETOOTH)
+  fun launchForFlow() = launchForFlow(null)
+
+  @RequiresPermission(Manifest.permission.BLUETOOTH)
+  override fun launch(input: Unit?, callback: ActivityResultCallback<Boolean>) {
     if (BluetoothAdapter.getDefaultAdapter()?.isEnabled != true) {
-      launch(null, callback)
+      super.launch(input, callback)
     } else {
       callback.onActivityResult(true)
     }

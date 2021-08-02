@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import com.dylanc.callbacks.Callback0
 import com.dylanc.callbacks.Callback1
+import kotlinx.coroutines.flow.flow
 
 /**
  * @author Dylan Cai
@@ -45,6 +46,19 @@ class RequestPermissionLauncher(private val caller: ActivityResultCaller) :
           onExplainRequest?.invoke() ?: onDenied(settingsLauncher)
         else -> onDenied(settingsLauncher)
       }
+    }
+  }
+
+  fun launchForFlow(
+    permission: String,
+    onDenied: Callback1<AppDetailsSettingsLauncher>,
+    onExplainRequest: Callback0? = null
+  ) = flow {
+    when {
+      launchForResult(permission) -> emit(Unit)
+      caller.shouldShowRequestPermissionRationale(permission) ->
+        onExplainRequest?.invoke() ?: onDenied(settingsLauncher)
+      else -> onDenied(settingsLauncher)
     }
   }
 }

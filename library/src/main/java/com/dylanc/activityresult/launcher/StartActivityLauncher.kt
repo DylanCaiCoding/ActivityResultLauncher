@@ -30,32 +30,35 @@ import com.dylanc.callbacks.Callback2
 /**
  * @author Dylan Cai
  */
-class StartActivityLauncher(private val caller: ActivityResultCaller) :
+class StartActivityLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Intent, ActivityResult>(caller, StartActivityForResult()) {
 
-  inline fun <reified T : Activity> launch(
-    vararg pairs: Pair<String, *>,
-    onActivityResult: Callback2<Int, Intent?>
-  ) {
+  inline fun <reified T : Activity> launch(vararg pairs: Pair<String, *>, onActivityResult: Callback2<Int, Intent?>) {
     launch(T::class.java, bundleOf(*pairs), onActivityResult)
   }
 
   @JvmOverloads
-  fun <T : Activity> launch(
-    clazz: Class<T>,
-    extras: Bundle? = null,
-    onActivityResult: Callback2<Int, Intent?>
-  ) {
+  fun <T : Activity> launch(clazz: Class<T>, extras: Bundle? = null, onActivityResult: Callback2<Int, Intent?>) {
     val intent = Intent(context, clazz)
     extras?.let { intent.putExtras(it) }
     launch(intent, onActivityResult)
   }
 
-  fun launch(
-    intent: Intent,
-    onActivityResult: Callback2<Int, Intent?>
-  ) =
-    launch(intent) { result ->
-      onActivityResult(result.resultCode, result.data)
-    }
+  fun launch(intent: Intent, onActivityResult: Callback2<Int, Intent?>) =
+    launch(intent) { result -> onActivityResult(result.resultCode, result.data) }
+
+  suspend inline fun <reified T : Activity> launchForResult(vararg pairs: Pair<String, *>) =
+    launchForResult<T>(bundleOf(*pairs))
+
+  suspend inline fun <reified T : Activity> launchForResult(extras: Bundle? = null) =
+    launchForResult(Intent<T>(extras))
+
+  inline fun <reified T : Activity> launchForFlow(vararg pairs: Pair<String, *>) =
+    launchForFlow<T>(bundleOf(*pairs))
+
+  inline fun <reified T : Activity> launchForFlow(extras: Bundle? = null) =
+    launchForFlow(Intent<T>(extras))
+
+  inline fun <reified T : Activity> Intent(extras: Bundle? = null) =
+    Intent(context, T::class.java).apply { extras?.let { putExtras(it) } }
 }

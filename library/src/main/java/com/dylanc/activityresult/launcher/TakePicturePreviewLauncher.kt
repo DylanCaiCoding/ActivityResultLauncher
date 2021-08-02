@@ -30,4 +30,8 @@ class TakePicturePreviewLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Void, Bitmap>(caller, TakePicturePreview()) {
 
   fun launch(onActivityResult: ActivityResultCallback<Bitmap?>) = launch(null, onActivityResult)
+
+  suspend fun launchForResult() = launchForResult(null)
+
+  fun launchForFlow() = launchForFlow(null)
 }

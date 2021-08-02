@@ -29,7 +29,9 @@ import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 class CreateDocumentLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<String, Uri>(caller, CreateDocument()) {
 
-  fun launch(callback: ActivityResultCallback<Uri>) {
-    launch(null, callback)
-  }
+  fun launch(callback: ActivityResultCallback<Uri>) = launch(null, callback)
+
+  suspend fun launchForResult() = launchForResult(null)
+
+  fun launchForFlow() = launchForFlow(null)
 }

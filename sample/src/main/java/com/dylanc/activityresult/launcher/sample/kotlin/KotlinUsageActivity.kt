@@ -34,7 +34,7 @@ import com.dylanc.activityresult.launcher.sample.widget.PictureDialogFragment
 import com.dylanc.viewbinding.binding
 
 
-class KotlinSampleActivity : BaseActivity() {
+class KotlinUsageActivity : BaseActivity() {
 
   private val binding: ActivityLauncherBinding by binding()
   private val startActivityLauncher = StartActivityLauncher(this)
@@ -168,7 +168,7 @@ class KotlinSampleActivity : BaseActivity() {
       },
       onExplainRequestPermission = {
         showDialog(R.string.need_permission_title, R.string.need_read_permission) {
-          pickPicture()
+          pickVideo()
         }
       }
     )
@@ -319,8 +319,7 @@ class KotlinSampleActivity : BaseActivity() {
         contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
           ?.use { cursor ->
             if (cursor.moveToFirst()) {
-              val name =
-                cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+              val name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
               toast(name)
             }
           }
@@ -342,7 +341,6 @@ class KotlinSampleActivity : BaseActivity() {
       }
     }
   }
-
 
   private fun openDocumentTree() {
     openDocumentTreeLauncher.launch { uri ->

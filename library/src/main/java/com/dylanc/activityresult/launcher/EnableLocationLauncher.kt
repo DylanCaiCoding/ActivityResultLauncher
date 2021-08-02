@@ -37,9 +37,15 @@ val Context.isLocationEnabled: Boolean
 class EnableLocationLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Unit, Boolean>(caller, EnableLocationContract(caller)) {
 
-  fun launch(callback: ActivityResultCallback<Boolean>) {
+  fun launch(callback: ActivityResultCallback<Boolean>) = launch(null, callback)
+
+  suspend fun launchForResult() = launchForResult(null)
+
+  fun launchForFlow() = launchForFlow(null)
+
+  override fun launch(input: Unit?, callback: ActivityResultCallback<Boolean>) {
     if (!context.isLocationEnabled) {
-      launch(null, callback)
+      super.launch(input, callback)
     } else {
       callback.onActivityResult(true)
     }

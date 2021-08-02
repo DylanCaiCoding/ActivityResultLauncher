@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestMultiple
 import com.dylanc.callbacks.Callback0
 import com.dylanc.callbacks.Callback1
 import com.dylanc.callbacks.Callback2
+import kotlinx.coroutines.flow.flow
 
 /**
  * @author Dylan Cai
@@ -55,6 +56,27 @@ class RequestMultiplePermissionsLauncher(private val caller: ActivityResultCalle
       } else {
         onAllGranted()
       }
+    }
+  }
+
+  fun launchForFlow(vararg permissions: String) = launchForFlow(arrayOf(*permissions))
+
+  fun launchForFlow(
+    vararg permissions: String,
+    onDenied: Callback2<List<String>, AppDetailsSettingsLauncher>,
+    onExplainRequest: (Callback1<List<String>>)? = null
+  ) = flow {
+    val result = launchForResult(arrayOf(*permissions))
+    if (result.containsValue(false)) {
+      val deniedList = result.filter { !it.value }.map { it.key }
+      val explainableList = deniedList.filter { caller.shouldShowRequestPermissionRationale(it) }
+      if (explainableList.isNotEmpty()) {
+        onExplainRequest?.invoke(explainableList) ?: onDenied(explainableList, settingsLauncher)
+      } else {
+        onDenied(deniedList, settingsLauncher)
+      }
+    } else {
+      emit(Unit)
     }
   }
 }

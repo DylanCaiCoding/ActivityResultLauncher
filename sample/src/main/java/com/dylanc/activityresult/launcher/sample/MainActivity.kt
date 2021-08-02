@@ -23,8 +23,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.dylanc.activityresult.launcher.sample.databinding.ActivityMainBinding
-import com.dylanc.activityresult.launcher.sample.java.JavaSampleActivity
-import com.dylanc.activityresult.launcher.sample.kotlin.KotlinSampleActivity
+import com.dylanc.activityresult.launcher.sample.java.JavaUsageActivity
+import com.dylanc.activityresult.launcher.sample.kotlin.CoroutineUsageActivity
+import com.dylanc.activityresult.launcher.sample.kotlin.KotlinUsageActivity
 import com.dylanc.viewbinding.binding
 
 class MainActivity : AppCompatActivity() {
@@ -34,10 +35,13 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding.btnKotlin.setOnClickListener {
-      startActivity(Intent(this, KotlinSampleActivity::class.java))
+      startActivity(Intent(this, KotlinUsageActivity::class.java))
+    }
+    binding.btnKotlinCoroutine.setOnClickListener {
+      startActivity(Intent(this, CoroutineUsageActivity::class.java))
     }
     binding.btnJava.setOnClickListener {
-      startActivity(Intent(this, JavaSampleActivity::class.java))
+      startActivity(Intent(this, JavaUsageActivity::class.java))
     }
   }
 

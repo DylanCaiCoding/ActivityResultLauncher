@@ -61,7 +61,7 @@ import static com.dylanc.activityresult.launcher.sample.java.launcher.InputTextR
 /**
  * @author Dylan Cai
  */
-public class JavaSampleActivity extends BaseActivity {
+public class JavaUsageActivity extends BaseActivity {
 
   private final StartActivityLauncher startActivityLauncher = new StartActivityLauncher(this);
   private final RequestPermissionLauncher requestPermissionLauncher = new RequestPermissionLauncher(this);
@@ -119,50 +119,6 @@ public class JavaSampleActivity extends BaseActivity {
         toast(value);
       }
     });
-  }
-
-  private void requestPermission() {
-    requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION,
-        () -> toast(R.string.location_permission_granted),
-        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_location_permission, settingsLauncher::launch),
-        () -> showDialog(R.string.need_permission_title, R.string.need_location_permission, this::requestPermission)
-    );
-  }
-
-  private void requestMultiplePermissions() {
-    requestMultiplePermissionsLauncher.launch(
-        new String[]{
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        },
-        () -> toast(R.string.location_and_read_permissions_granted),
-        (list, settingsLauncher) -> {
-          int message;
-          if (list.size() == 2) {
-            message = R.string.need_location_and_read_permissions;
-          } else if (list.get(0).equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            message = R.string.need_location_permission;
-          } else {
-            message = R.string.need_read_permission;
-          }
-          showDialog(R.string.need_permission_title, message, settingsLauncher::launch);
-        },
-        (list) -> {
-          int message;
-          if (list.size() == 2) {
-            message = R.string.need_location_and_read_permissions;
-          } else if (list.get(0).equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            message = R.string.need_location_permission;
-          } else {
-            message = R.string.need_read_permission;
-          }
-          showDialog(R.string.need_permission_title, message, this::requestMultiplePermissions);
-        }
-    );
-  }
-
-  private void goToAppDetailsSettings() {
-    appDetailsSettingsLauncher.launch();
   }
 
   private void takePicturePreview() {
@@ -224,7 +180,7 @@ public class JavaSampleActivity extends BaseActivity {
           }
         },
         (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
-        () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickPicture)
+        () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickVideo)
     );
   }
 
@@ -240,7 +196,7 @@ public class JavaSampleActivity extends BaseActivity {
           }
         },
         (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
-        () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickPicture)
+        () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::getMultiplePicture)
     );
   }
 
@@ -256,8 +212,52 @@ public class JavaSampleActivity extends BaseActivity {
           }
         },
         (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_read_permission, settingsLauncher::launch),
-        () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::pickPicture)
+        () -> showDialog(R.string.need_permission_title, R.string.need_read_permission, this::getMultipleVideo)
     );
+  }
+
+  private void requestPermission() {
+    requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION,
+        () -> toast(R.string.location_permission_granted),
+        (settingsLauncher) -> showDialog(R.string.need_permission_title, R.string.no_location_permission, settingsLauncher::launch),
+        () -> showDialog(R.string.need_permission_title, R.string.need_location_permission, this::requestPermission)
+    );
+  }
+
+  private void requestMultiplePermissions() {
+    requestMultiplePermissionsLauncher.launch(
+        new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        },
+        () -> toast(R.string.location_and_read_permissions_granted),
+        (list, settingsLauncher) -> {
+          int message;
+          if (list.size() == 2) {
+            message = R.string.need_location_and_read_permissions;
+          } else if (list.get(0).equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            message = R.string.need_location_permission;
+          } else {
+            message = R.string.need_read_permission;
+          }
+          showDialog(R.string.need_permission_title, message, settingsLauncher::launch);
+        },
+        (list) -> {
+          int message;
+          if (list.size() == 2) {
+            message = R.string.need_location_and_read_permissions;
+          } else if (list.get(0).equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            message = R.string.need_location_permission;
+          } else {
+            message = R.string.need_read_permission;
+          }
+          showDialog(R.string.need_permission_title, message, this::requestMultiplePermissions);
+        }
+    );
+  }
+
+  private void goToAppDetailsSettings() {
+    appDetailsSettingsLauncher.launch();
   }
 
   private void enableBluetooth() {

@@ -29,7 +29,10 @@ import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 class OpenDocumentLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Array<String>, Uri>(caller, OpenDocument()) {
 
-  fun launch(vararg input: String, callback: ActivityResultCallback<Uri>) {
+  fun launch(vararg input: String, callback: ActivityResultCallback<Uri>) =
     launch(arrayOf(*input), callback)
-  }
+
+  suspend fun launchForResult(vararg input: String) = launchForResult(arrayOf(*input))
+
+  fun launchForFlow(vararg input: String) = launchForFlow(arrayOf(*input))
 }

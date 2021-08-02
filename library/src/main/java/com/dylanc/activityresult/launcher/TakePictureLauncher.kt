@@ -26,7 +26,10 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.TakePicture
 import androidx.core.content.FileProvider
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
+import kotlin.coroutines.resume
 
 /**
  * @author Dylan Cai
@@ -34,21 +37,21 @@ import java.io.File
 class TakePictureLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Uri, Boolean>(caller, TakePicture()) {
 
-  fun launch(callback: ActivityResultCallback<Uri?>) {
-    val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.jpg")
-    val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-    } else {
-      Uri.fromFile(file)
-    }
-    launch(uri, callback)
-  }
+  fun launch(callback: ActivityResultCallback<Uri?>) = launch(externalCacheUri, callback)
 
   @JvmOverloads
-  fun launchForMediaImage(contentValues: ContentValues = ContentValues(), callback: ActivityResultCallback<Uri?>) {
-    val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)!!
-    launch(uri, callback)
-  }
+  fun launchForMediaImage(contentValues: ContentValues = ContentValues(), callback: ActivityResultCallback<Uri?>) =
+    launch(mediaUriOf(contentValues), callback)
+
+  suspend fun launchForResult() = launchForUriResult(externalCacheUri)
+
+  suspend fun launchForMediaImageResult(contentValues: ContentValues = ContentValues()) =
+    launchForUriResult(mediaUriOf(contentValues))
+
+  fun launchForFlow() = launchForUriFlow(externalCacheUri)
+
+  fun launchForMediaImageFlow(contentValues: ContentValues = ContentValues()) =
+    launchForUriFlow(mediaUriOf(contentValues))
 
   private fun launch(uri: Uri, callback: ActivityResultCallback<Uri?>) {
     launch(uri) {
@@ -59,4 +62,30 @@ class TakePictureLauncher(caller: ActivityResultCaller) :
       }
     }
   }
+
+  private suspend fun launchForUriResult(uri: Uri) =
+    suspendCancellableCoroutine<Uri> { continuation ->
+      launch(uri) {
+        if (it) {
+          continuation.resume(uri)
+        } else {
+          continuation.cancel()
+        }
+      }
+    }
+
+  private fun launchForUriFlow(uri: Uri) = flow { emit(launchForUriResult(uri)) }
+
+  private val externalCacheUri: Uri
+    get() {
+      val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.jpg")
+      return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+      } else {
+        Uri.fromFile(file)
+      }
+    }
+
+  private fun mediaUriOf(contentValues: ContentValues) =
+    context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)!!
 }

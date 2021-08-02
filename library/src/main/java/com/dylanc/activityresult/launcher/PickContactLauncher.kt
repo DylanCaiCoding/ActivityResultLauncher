@@ -29,5 +29,9 @@ import androidx.activity.result.contract.ActivityResultContracts.PickContact
 class PickContactLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Void, Uri>(caller, PickContact()) {
 
-  fun launch(onActivityResult: ActivityResultCallback<Uri?>) = launch(null, onActivityResult)
+  fun launch(onActivityResult: ActivityResultCallback<Uri>) = launch(null, onActivityResult)
+
+  suspend fun launchForResult() = launchForResult(null)
+
+  fun launchForFlow() = launchForFlow(null)
 }

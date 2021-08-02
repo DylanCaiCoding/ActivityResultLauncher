@@ -29,7 +29,9 @@ import androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTre
 class OpenDocumentTreeLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Uri, Uri>(caller, OpenDocumentTree()) {
 
-  fun launch(callback: ActivityResultCallback<Uri>) {
-    launch(null, callback)
-  }
+  fun launch(callback: ActivityResultCallback<Uri>) = launch(null, callback)
+
+  suspend fun launchForResult() = launchForResult(null)
+
+  fun launchForFlow() = launchForFlow(null)
 }

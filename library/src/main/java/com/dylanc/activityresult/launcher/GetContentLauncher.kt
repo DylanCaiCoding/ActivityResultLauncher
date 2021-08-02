@@ -34,10 +34,18 @@ class GetContentLauncher(caller: ActivityResultCaller) :
 
   private val requestPermissionLauncher = RequestPermissionLauncher(caller)
 
+  suspend fun launchForImageResult() = launchForResult("image/*")
+
+  suspend fun launchForVideoResult() = launchForResult("video/*")
+
+  fun launchForImageFlow() = launchForFlow("image/*")
+
+  fun launchForVideoFlow() = launchForFlow("video/*")
+
   @JvmOverloads
   fun launch(
     input: String,
-    onActivityResult: ActivityResultCallback<Uri?>,
+    onActivityResult: ActivityResultCallback<Uri>,
     onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) {
@@ -51,14 +59,14 @@ class GetContentLauncher(caller: ActivityResultCaller) :
 
   @JvmOverloads
   fun launchForImage(
-    onActivityResult: ActivityResultCallback<Uri?>,
+    onActivityResult: ActivityResultCallback<Uri>,
     onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) = launch("image/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)
 
   @JvmOverloads
   fun launchForVideo(
-    onActivityResult: ActivityResultCallback<Uri?>,
+    onActivityResult: ActivityResultCallback<Uri>,
     onPermissionDenied: Callback1<AppDetailsSettingsLauncher>,
     onExplainRequestPermission: Callback0? = null
   ) = launch("video/*", onActivityResult, onPermissionDenied, onExplainRequestPermission)

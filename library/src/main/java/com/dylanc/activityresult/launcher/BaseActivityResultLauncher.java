@@ -55,7 +55,7 @@ public class BaseActivityResultLauncher<I, O> {
     launcher.launch(input, options);
   }
 
-  protected Context getContext() {
+  public Context getContext() {
     return ActivityResultCallerKt.getContext(caller);
   }
 }

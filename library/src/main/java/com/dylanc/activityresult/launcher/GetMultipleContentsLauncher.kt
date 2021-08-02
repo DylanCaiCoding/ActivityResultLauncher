@@ -34,6 +34,14 @@ class GetMultipleContentsLauncher(caller: ActivityResultCaller) :
 
   private val permissionLauncher = RequestPermissionLauncher(caller)
 
+  suspend fun launchForImageResult() = launchForNonEmptyResult("image/*")
+
+  suspend fun launchForVideoResult() = launchForNonEmptyResult("video/*")
+
+   fun launchForImageFlow() = launchForNonEmptyFlow("image/*")
+
+   fun launchForVideoFlow() = launchForNonEmptyFlow("video/*")
+
   @JvmOverloads
   fun launch(
     input: String,

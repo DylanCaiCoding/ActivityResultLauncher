@@ -28,7 +28,10 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts.TakeVideo
 import androidx.core.content.FileProvider
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
+import kotlin.coroutines.resume
 
 /**
  * @author Dylan Cai
@@ -36,26 +39,25 @@ import java.io.File
 class TakeVideoLauncher(caller: ActivityResultCaller) :
   BaseActivityResultLauncher<Uri, Bitmap>(caller, TakeVideo()) {
 
-  fun launch(callback: ActivityResultCallback<Uri?>) {
-    val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.mp4")
-    val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-    } else {
-      Uri.fromFile(file)
-    }
-    launch(uri, callback)
-  }
+  fun launch(callback: ActivityResultCallback<Uri?>) = launch(externalCacheUri, callback)
 
   @JvmOverloads
-  fun launchForMediaImage(contentValues: ContentValues = ContentValues(), callback: ActivityResultCallback<Uri?>) {
-    val uri = context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)!!
-    launch(uri, callback)
-  }
+  fun launchForMediaVideo(contentValues: ContentValues = ContentValues(), callback: ActivityResultCallback<Uri?>) =
+    launch(mediaUriOf(contentValues), callback)
+
+  suspend fun launchForResult() = launchForUriResult(externalCacheUri)
+
+  suspend fun launchForMediaVideoResult(contentValues: ContentValues = ContentValues()) =
+    launchForUriResult(mediaUriOf(contentValues))
+
+  fun launchForFlow() = launchForUriFlow(externalCacheUri)
+
+  fun launchForMediaImageFlow(contentValues: ContentValues = ContentValues()) =
+    launchForUriFlow(mediaUriOf(contentValues))
 
   private fun launch(uri: Uri, callback: ActivityResultCallback<Uri?>) {
     launch(uri) {
-      val size = uri.size
-      if (size > 0) {
+      if (uri.size > 0) {
         callback.onActivityResult(uri)
       } else {
         callback.onActivityResult(null)
@@ -63,13 +65,33 @@ class TakeVideoLauncher(caller: ActivityResultCaller) :
     }
   }
 
-  private val Uri.size: Long
-    get() =
-      context.contentResolver.query(this, arrayOf(OpenableColumns.SIZE), null, null, null)?.use { cursor ->
-        if (cursor.moveToFirst()) {
-          cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
-        }else {
-          0
+  private suspend fun launchForUriResult(uri: Uri) =
+    suspendCancellableCoroutine<Uri> { continuation ->
+      launch(uri) { uri: Uri? ->
+        if (uri != null) {
+          continuation.resume(uri)
+        } else {
+          continuation.cancel()
         }
-      } ?: 0
+      }
+    }
+
+  private fun launchForUriFlow(uri: Uri) = flow { emit(launchForUriResult(uri)) }
+
+  private val externalCacheUri: Uri
+    get() {
+      val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.mp4")
+      return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+      } else {
+        Uri.fromFile(file)
+      }
+    }
+
+  private fun mediaUriOf(contentValues: ContentValues) =
+    context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)!!
+
+  private val Uri.size: Long
+    get() = context.contentResolver.query(this, arrayOf(OpenableColumns.SIZE), null, null, null)
+      ?.use { if (it.moveToFirst()) it.getLong(it.getColumnIndex(OpenableColumns.SIZE)) else 0 } ?: 0
 }

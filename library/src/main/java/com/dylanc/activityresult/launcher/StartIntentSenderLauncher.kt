@@ -42,15 +42,28 @@ class StartIntentSenderLauncher(caller: ActivityResultCaller) :
     @Flag flagsValues: Int = 0,
     flagsMask: Int = 0,
     onActivityResult: Callback2<Int, Intent?>
-  ) {
-    val request = IntentSenderRequest.Builder(intentSender)
-      .setFillInIntent(fillInIntent)
-      .setFlags(flagsValues, flagsMask)
-      .build()
-    launch(request) {
+  ) =
+    launch(IntentSenderRequest(intentSender, fillInIntent, flagsValues, flagsMask)) {
       onActivityResult(it.resultCode, it.data)
     }
-  }
+
+  suspend fun launchForResult(
+    intentSender: IntentSender,
+    fillInIntent: Intent? = null,
+    @Flag flagsValues: Int = 0,
+    flagsMask: Int = 0
+  ) =
+    launchForResult(IntentSenderRequest(intentSender, fillInIntent, flagsValues, flagsMask))
+
+  private fun IntentSenderRequest(
+    intentSender: IntentSender,
+    fillInIntent: Intent? = null,
+    @Flag flagsValues: Int = 0,
+    flagsMask: Int = 0
+  ) = IntentSenderRequest.Builder(intentSender)
+    .setFillInIntent(fillInIntent)
+    .setFlags(flagsValues, flagsMask)
+    .build()
 
   @SuppressLint("InlinedApi")
   @IntDef(

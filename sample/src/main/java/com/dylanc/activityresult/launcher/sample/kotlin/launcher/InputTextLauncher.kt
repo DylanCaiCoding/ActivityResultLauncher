@@ -18,6 +18,7 @@ package com.dylanc.activityresult.launcher.sample.kotlin.launcher
 
 import androidx.activity.result.ActivityResultCaller
 import com.dylanc.activityresult.launcher.BaseActivityResultLauncher
+import com.dylanc.activityresult.launcher.launchForResult
 
 /**
  * @author Dylan Cai
@@ -35,4 +36,13 @@ class InputTextLauncher(caller: ActivityResultCaller) :
     onActivityResult: (String?) -> Unit
   ) =
     launch(InputTextRequest(name, title, hint, value, listener), onActivityResult)
+
+  suspend fun launchForResult(
+    name: String,
+    title: String = name,
+    hint: String? = null,
+    value: String? = null,
+    listener: OnFilterValueListener? = null
+  ) =
+    launchForResult(InputTextRequest(name, title, hint, value, listener))
 }
