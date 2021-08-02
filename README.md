@@ -10,11 +10,11 @@ English | [中文](https://github.com/DylanCaiCoding/ActivityResultLauncher/blob
 
 - Replace `startActivityForResult()` perfectly
 - Support for the usage of Kotlin and Java
-- Support for requesting permission
-- Support for taking picture
-- Support for taking video
-- Support for selecting pictures or videos (Adapted to Android 10)
+- Support for taking picture (Adapted to Android 10)
+- Support for taking video (Adapted to Android 10)
+- Support for selecting pictures or videos
 - Support for cropping pictures (Adapted to Android11)
+- Support for requesting permission
 - Support for enabling Bluetooth
 - Support for enabling positioning
 - Support for the use of storage access frameworks
@@ -46,7 +46,7 @@ Add dependencies：
 
 ```groovy
 dependencies {
-    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.0.0'
+    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.0.1'
 }
 ```
 
