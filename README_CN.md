@@ -57,6 +57,8 @@ dependencies {
 
 - [基础用法](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/基础用法-(Kotlin))
 
+- [协程用法](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/协程用法)
+
 - [自定义启动器](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/自定义启动器-(Kotlin))
 
 #### Java 用法
