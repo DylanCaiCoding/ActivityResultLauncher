@@ -10,6 +10,7 @@ English | [中文](https://github.com/DylanCaiCoding/ActivityResultLauncher/blob
 
 - Replace `startActivityForResult()` perfectly
 - Support for the usage of Kotlin and Java
+- Support for the usage of coroutine
 - Support for taking picture (Adapted to Android 10)
 - Support for taking video (Adapted to Android 10)
 - Support for selecting pictures or videos
@@ -46,7 +47,7 @@ Add dependencies：
 
 ```groovy
 dependencies {
-    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.0.1'
+    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.0'
 }
 ```
 
@@ -55,6 +56,8 @@ dependencies {
 #### Kotlin usage
 
 - [Basic usage](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/基础用法-(Kotlin))
+
+- [Coroutine usage](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/协程用法)
 
 - [Custom launcher](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/自定义启动器-(Kotlin))
 
