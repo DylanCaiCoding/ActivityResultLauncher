@@ -10,9 +10,10 @@
 
 - 完美地替代 `startActivityForResult()`
 - 支持 Kotlin 和 Java 用法
-- 支持拍照
-- 支持录像
-- 支持选择图片或视频（已适配 Android 10）
+- 支持协程用法
+- 支持拍照（已适配 Android 10）
+- 支持录像（已适配 Android 10）
+- 支持选择图片或视频
 - 支持裁剪图片（已适配 Android11）
 - 支持请求权限
 - 支持打开蓝牙
@@ -46,7 +47,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.0.1'
+    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.0'
 }
 ```
 
