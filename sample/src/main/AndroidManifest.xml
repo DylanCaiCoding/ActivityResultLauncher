@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="com.dylanc.activityresult.launcher.sample">
 
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -9,7 +10,8 @@
   <uses-permission android:name="android.permission.READ_CONTACTS" />
 
   <application
-    android:allowBackup="true"
+    android:name=".App"
+    android:allowBackup="false"
     android:icon="@mipmap/ic_logo"
     android:label="@string/app_name"
     android:supportsRtl="true"
@@ -19,13 +21,27 @@
     <activity android:name=".kotlin.KotlinUsageActivity" />
     <activity android:name=".kotlin.CoroutineUsageActivity" />
     <activity android:name=".java.JavaUsageActivity" />
-    <activity android:name=".MainActivity">
+    <activity
+      android:name=".MainActivity"
+      android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <provider
+      android:name="androidx.core.content.FileProvider"
+      android:authorities="${applicationId}.fileProvider"
+      android:exported="false"
+      android:grantUriPermissions="true"
+      tools:replace="android:authorities">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/filepaths"
+        tools:replace="android:resource" />
+    </provider>
   </application>
 
 </manifest>

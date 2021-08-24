@@ -25,15 +25,19 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 /**
  * @author Dylan Cai
  */
+@SuppressWarnings("unused")
 public class BaseActivityResultLauncher<I, O> {
 
   private final androidx.activity.result.ActivityResultLauncher<I> launcher;
   private final ActivityResultCaller caller;
   private ActivityResultCallback<O> callback;
+  private MutableLiveData<O> unprocessedResult;
 
   public BaseActivityResultLauncher(@NonNull ActivityResultCaller caller, @NonNull ActivityResultContract<I, O> contract) {
     this.caller = caller;
@@ -41,6 +45,8 @@ public class BaseActivityResultLauncher<I, O> {
       if (callback != null) {
         callback.onActivityResult(result);
         callback = null;
+      } else {
+        getUnprocessedResultLiveData().setValue(result);
       }
     });
   }
@@ -55,7 +61,18 @@ public class BaseActivityResultLauncher<I, O> {
     launcher.launch(input, options);
   }
 
+  public LiveData<O> getUnprocessedResult() {
+    return getUnprocessedResultLiveData();
+  }
+
   public Context getContext() {
     return ActivityResultCallerKt.getContext(caller);
+  }
+
+  private MutableLiveData<O> getUnprocessedResultLiveData() {
+    if (unprocessedResult == null) {
+      unprocessedResult = new MutableLiveData<>();
+    }
+    return unprocessedResult;
   }
 }

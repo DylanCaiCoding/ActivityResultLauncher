@@ -82,7 +82,7 @@ class TakeVideoLauncher(caller: ActivityResultCaller) :
     get() {
       val file = File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.mp4")
       return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+        FileProvider.getUriForFile(context, FileProviderUtils.authority ?: "${context.packageName}.provider", file)
       } else {
         Uri.fromFile(file)
       }

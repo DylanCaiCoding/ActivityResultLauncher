@@ -20,6 +20,7 @@ import android.Manifest
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.OpenableColumns
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
 import com.dylanc.activityresult.launcher.*
 import com.dylanc.activityresult.launcher.sample.BaseActivity
@@ -56,6 +57,10 @@ class KotlinUsageActivity : BaseActivity() {
   private val enableLocationLauncher = EnableLocationLauncher(this)
   private val inputTextLauncher = InputTextLauncher(this)
 
+  private val getContent = registerForActivityResult(ActivityResultContracts.TakePicturePreview()){
+    toast(it.toString())
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     with(binding) {
@@ -83,14 +88,15 @@ class KotlinUsageActivity : BaseActivity() {
   }
 
   private fun startInputTextActivity() {
-    startActivityLauncher.launch<InputTextActivity>(
-      KEY_NAME to "nickname",
-      KEY_TITLE to "Nickname",
-    ) { resultCode, data ->
-      if (resultCode == RESULT_OK) {
-        data?.getStringExtra(KEY_VALUE)?.let { toast(it) }
-      }
-    }
+//    startActivityLauncher.launch<InputTextActivity>(
+//      KEY_NAME to "nickname",
+//      KEY_TITLE to "Nickname",
+//    ) { resultCode, data ->
+//      if (resultCode == RESULT_OK) {
+//        data?.getStringExtra(KEY_VALUE)?.let { toast(it) }
+//      }
+//    }
+    getContent.launch(null)
   }
 
   private fun takePicturePreview() {
