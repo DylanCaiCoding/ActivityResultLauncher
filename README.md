@@ -8,7 +8,7 @@ English | [中文](https://github.com/DylanCaiCoding/ActivityResultLauncher/blob
 
 ## Feature
 
-- Replace `startActivityForResult()` perfectly
+- Replace `startActivityForResult()` gracefully
 - Support for the usage of Kotlin and Java
 - Support for the usage of coroutine
 - Support for taking picture (Adapted to Android 10)
@@ -47,7 +47,7 @@ Add dependencies：
 
 ```groovy
 dependencies {
-    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.0'
+    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.1'
 }
 ```
 
