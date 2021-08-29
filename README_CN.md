@@ -8,7 +8,7 @@
 
 ## Feature
 
-- 完美地替代 `startActivityForResult()`
+- 优雅地替代 `startActivityForResult()`
 - 支持 Kotlin 和 Java 用法
 - 支持协程用法
 - 支持拍照（已适配 Android 10）
@@ -47,7 +47,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.0'
+    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.1'
 }
 ```
 
@@ -74,10 +74,6 @@ dependencies {
 ## 更新日志
 
 [Releases](https://github.com/DylanCaiCoding/ActivityResultLauncher/releases)
-
-## 封装思路
-
-[《优雅地封装 Activity Result API，完美地替代 startActivityForResult()》](https://juejin.cn/post/6987575150283587592)
 
 ## 作者其它的库
 
