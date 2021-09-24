@@ -31,6 +31,7 @@ import androidx.core.content.FileProvider
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
+import java.io.FileNotFoundException
 import kotlin.coroutines.resume
 
 /**
@@ -93,5 +94,16 @@ class TakeVideoLauncher(caller: ActivityResultCaller) :
 
   private val Uri.size: Long
     get() = context.contentResolver.query(this, arrayOf(OpenableColumns.SIZE), null, null, null)
-      ?.use { if (it.moveToFirst()) it.getLong(it.getColumnIndex(OpenableColumns.SIZE)) else 0 } ?: 0
+      ?.use { cursor ->
+        cursor.takeIf { it.moveToFirst() }?.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
+          ?.let { size ->
+            if (size == 0L) {
+              try {
+                context.contentResolver.openFileDescriptor(this, "r")?.statSize
+              } catch (e: FileNotFoundException) {
+                0
+              }
+            } else size
+          }
+      } ?: 0
 }
