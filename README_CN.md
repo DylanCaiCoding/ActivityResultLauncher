@@ -77,7 +77,7 @@ dependencies {
 
 ## 作者其它的库
 
-- [LoadingHelper](https://github.com/DylanCaiCoding/LoadingHelper) —— 深度解耦标题栏或加载中、加载失败、无数据等视图
+- [LoadingStateView](https://github.com/DylanCaiCoding/LoadingStateView) —— 深度解耦标题栏或加载中、加载失败、无数据等视图
 - [ViewBindingKTX](https://github.com/DylanCaiCoding/ViewBindingKTX) —— 最全面的 ViewBinding 工具
 
 ## License
