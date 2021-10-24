@@ -47,7 +47,7 @@ Add dependencies：
 
 ```groovy
 dependencies {
-    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.1'
+    implementation 'com.github.DylanCaiCoding:ActivityResultLauncher:1.1.2'
 }
 ```
 
@@ -77,8 +77,12 @@ dependencies {
 
 ## Author's other libraries
 
-- [LoadingStateView](https://github.com/DylanCaiCoding/LoadingStateView), a highly expandable Android library for decoupling the code of toolbar or loading status view.
-- [ViewBindingKTX](https://github.com/DylanCaiCoding/ViewBindingKTX), the most comprehensive utils of ViewBinding.
+| Library                                                      | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [Longan](https://github.com/DylanCaiCoding/Longan)           | A collection of Kotlin utils which makes Android application development faster and easier. |
+| [LoadingStateView](https://github.com/DylanCaiCoding/LoadingStateView) | Decoupling the code of toolbar or loading status view.       |
+| [ViewBindingKTX](https://github.com/DylanCaiCoding/ViewBindingKTX) | The most comprehensive utils of ViewBinding.                 |
+| [MMKV-KTX](https://github.com/DylanCaiCoding/MMKV-KTX)       | Easier to use the MMKV.                                      |
 
 ## License
 
