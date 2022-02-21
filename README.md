@@ -29,7 +29,6 @@ Click or scan the QR code to download
 
 [![QR code](image/qr-code.png)](https://www.pgyer.com/activityresultlauncher)
 
-
 ## Gradle
 
 Add it in your root build.gradle at the end of repositories:
@@ -55,21 +54,21 @@ dependencies {
 
 #### Kotlin usage
 
-- [Basic usage](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/基础用法-(Kotlin))
+- [Basic usage](https://dylancaicoding.github.io/ActivityResultLauncher/#/kotlin/basicusage)
 
-- [Coroutine usage](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/协程用法)
+- [Coroutine usage](https://dylancaicoding.github.io/ActivityResultLauncher/#/kotlin/coroutineusage)
 
-- [Custom launcher](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/自定义启动器-(Kotlin))
+- [Custom launcher](https://dylancaicoding.github.io/ActivityResultLauncher/#/kotlin/customlauncher)
 
 #### Java usage
 
-- [Basic usage](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/基础用法-(Java))
+- [Basic usage](https://dylancaicoding.github.io/ActivityResultLauncher/#/java/basicusage)
 
-- [Custom launcher](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/自定义启动器-(Java))
+- [Custom launcher](https://dylancaicoding.github.io/ActivityResultLauncher/#/java/customlauncher)
 
 #### Others
 
-- [Q&A](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/Q&A)
+- [Q&A](https://dylancaicoding.github.io/ActivityResultLauncher/#/others/q&a)
 
 ## Change log
 
@@ -79,7 +78,7 @@ dependencies {
 
 | Library                                                      | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [Longan](https://github.com/DylanCaiCoding/Longan)           | A collection of Kotlin utils which makes Android application development faster and easier. |
+| [Longan](https://github.com/DylanCaiCoding/Longan)           | A collection of Kotlin utils                                 |
 | [LoadingStateView](https://github.com/DylanCaiCoding/LoadingStateView) | Decoupling the code of toolbar or loading status view.       |
 | [ViewBindingKTX](https://github.com/DylanCaiCoding/ViewBindingKTX) | The most comprehensive utils of ViewBinding.                 |
 | [MMKV-KTX](https://github.com/DylanCaiCoding/MMKV-KTX)       | Easier to use the MMKV.                                      |
