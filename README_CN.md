@@ -29,7 +29,6 @@
 
 [![QR code](image/qr-code.png)](https://www.pgyer.com/activityresultlauncher)
 
-
 ## Gradle
 
 在根目录的 build.gradle 添加：
@@ -55,21 +54,21 @@ dependencies {
 
 #### Kotlin 用法
 
-- [基础用法](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/基础用法-(Kotlin))
+- [基础用法](https://dylancaicoding.github.io/ActivityResultLauncher/#/kotlin/basicusage)
 
-- [协程用法](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/协程用法)
+- [协程用法](https://dylancaicoding.github.io/ActivityResultLauncher/#/kotlin/coroutineusage)
 
-- [自定义启动器](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/自定义启动器-(Kotlin))
+- [自定义启动器](https://dylancaicoding.github.io/ActivityResultLauncher/#/kotlin/customlauncher)
 
 #### Java 用法
 
-- [基础用法](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/基础用法-(Java))
+- [基础用法](https://dylancaicoding.github.io/ActivityResultLauncher/#/java/basicusage)
 
-- [自定义启动器](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/自定义启动器-(Java))
+- [自定义启动器](https://dylancaicoding.github.io/ActivityResultLauncher/#/java/customlauncher)
 
 #### 其它
 
-- [Q&A](https://github.com/DylanCaiCoding/ActivityResultLauncher/wiki/Q&A)
+- [Q&A](https://dylancaicoding.github.io/ActivityResultLauncher/#/others/q&a)
 
 ## 更新日志
 
@@ -77,12 +76,12 @@ dependencies {
 
 ## 作者其它的库
 
-| 库                                                           | 简介                                           |
+| 库                                                           | 简介                                            |
 | ------------------------------------------------------------ | ---------------------------------------------- |
-| [Longan](https://github.com/DylanCaiCoding/Longan)           | 简化 Android 开发的 Kotlin 工具类集合      |
-| [LoadingStateView](https://github.com/DylanCaiCoding/LoadingStateView) | 深度解耦标题栏或加载中、加载失败、无数据等视图 |
-| [ViewBindingKTX](https://github.com/DylanCaiCoding/ViewBindingKTX) | 最全面的 ViewBinding 工具                      |
-| [MMKV-KTX](https://github.com/DylanCaiCoding/MMKV-KTX)       | 让 MMKV 更加易用                               |
+| [Longan](https://github.com/DylanCaiCoding/Longan)           | 可能是最好用的 Kotlin 工具类集合                         |
+| [LoadingStateView](https://github.com/DylanCaiCoding/LoadingStateView) | 深度解耦标题栏或加载中、加载失败、无数据等缺省页 |
+| [ViewBindingKTX](https://github.com/DylanCaiCoding/ViewBindingKTX) | 最全面的 ViewBinding 工具                   |
+| [MMKV-KTX](https://github.com/DylanCaiCoding/MMKV-KTX)       | 用属性委托的方式使用 MMKV                           |
 
 ## License
 
